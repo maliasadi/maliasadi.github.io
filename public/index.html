@@ -5,7 +5,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-	<meta name="generator" content="Hugo 0.66.0" />
+	<meta name="generator" content="Hugo 0.67.0" />
 		<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -33,7 +33,7 @@
     </div>
     <div class="collapse navbar-collapse" id="myNav">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#top">Home</a></li>
+        <li class="active"><a href="#">Blog</a></li>
         <li><a href="#biography">Biography</a></li>
         <li><a href="#education">Education</a></li>
         <li><a href="#experience">Experience</a></li>
@@ -76,39 +76,43 @@
 				
 				<div id="biography">
     <h3>
+        <span class="glyphicon glyphicon-console"></span><strong>Interests </strong>
+    </h3>
+    <div class="details">
+    My research interests are tied to cryptography and advanced software development with a strong background in mathematics, 
+    statistics, and programming. Currently, I am focused on developing high-performance software for computer algebra, that includes: 
+    <ul class="custom-list">
+        <ul style="text-align: left;">
+            <li>Computational algebraic geometry</li>
+            <li>Design and analysis of advanced data structures </li>		
+            <li>Design patterns and analysis of parallel algorithms</li>
+            <li>Low-level programming for algebraic computation</li>
+            </ul>
+    </ul>    
+    </div>
+    <h3>
         <span class="glyphicon glyphicon-console"></span><strong>Biography </strong>
     </h3>
     <div class="details">
-            I am currently developing the <a href="http://www.bpaslib.org/" target="_black">Basic Polynomial Algebra Subprograms</a> (BPAS) library, where 
-            my journey has been started with C implementation of advance algorithms over sparse multivariate polynomials from scratch,
-            and now, I am in charge of design, implementation, and optimization of algorithms over Finite Fields and Algebraic Extensions. 
-            This provides fast, optimized, and parallel (with Multicore/Manycore supports) software for solving polynomial systems 
+            My Ph.D. started with C implementation of algorithms over sparse multivariate polynomials from scratch in 
+            the <a href="http://www.bpaslib.org/" target="_black">Basic Polynomial Algebra Subprograms</a> (BPAS) library.
+            I am currently in charge of design, implementation, and optimization of algorithms over Finite Fields and Algebraic Extensions. 
+            This provides fast, optimized, and parallel (with multi-core/many-core supports) software for solving polynomial systems 
             (e.g., Curves, Surfaces, and Lattices) with the theory of RegularChains.
             <br>
             <br>
-            
-            In December of 2016, I defended my master thesis in Fully Homomorphic Encryption (FHE) over the integers 
-            under the supervision of <a href="https://dblp.org/pers/f/Farashahi:Reza_Rezaeian.html" target="_black">RR. Farashahi</a> and 
-            <a href="https://statistics.stanford.edu/people/ali-rejali" target="_black">A. Rejali</a>. I studied algorithmic efficiencies and new optimization of 
-            DGHV's FHE with some experimental prototyping in SageMath (Python).
-            <br> 
-            <br>
-            In September of 2014, I defended my bachelor thesis, which is a review of Elliptic Curve Cryptography schemes
-            in SSH, TSL, and Bitcoin cryptocurrency protocols, under the supervision of RR. Farashahi.
-            <br>
-            <br>
-            My research interests are tied to cryptography and advanced software development, where you need a strong background in mathematics, 
-            statistics, and programming. I am focused now on developing high-performance software for computer algebra, that includes: 
-            <ul class="custom-list">
-                <ul style="text-align: left;">
-                    <li>Computational Algebraic Geometry</li>
-                    <li>Design and Analysis of Advanced Data Structures </li>		
-                    <li>Design Patterns and Analysis of Parallel Algorithms</li>
-                    <li>Low-Level Programming for Algebraic Computation</li>
-                    </ul>
-            </ul>    
+            Previously, I studied algorithmic efficiencies and new optimization of Fully Homomorphic Encryption over the integers with some
+            experimental prototyping in SageMath (Python) as my master thesis under the supervision of <a href="https://dblp.org/pers/f/Farashahi:Reza_Rezaeian.html" target="_black">RR. Farashahi</a> and 
+            <a href="https://statistics.stanford.edu/people/ali-rejali" target="_black">A. Rejali</a>.
+            Prior to attending graduate school, I defended my bachelor technical report in Elliptic Curve Cryptography schemes
+            in SSH, TSL, and Bitcoin cryptocurrency protocols.
     </div>
 </div>
+
+
+
+
+
 				
 				
 				
@@ -120,13 +124,13 @@
         <ul class="custom" style="text-align: left;">
             <li>The University of Western Ontario (UWO)</li>
             <ul class="custom-list">
-                <li>PhD student in Computer Science, 2017-cont.</li>
+                <li>Ph.D. student in Computer Science, 2017-present.</li>
             </ul>
             <li>Isfahan University of Technology (IUT)</li>
             <ul class="custom-list">
                 <li>M.Sc. in Cryptography, 2014-2017 (Ranked 1<sup>st</sup> in the department) </li>
                 <li>B.Sc. in Applied Math. with a minor in Computer Science, 2010-2014 (Ranked 1<sup>st</sup> in the department) </li>
-                    <li>B.Sc. in Industrial Engineering, ~2011 (I changed my major to Applied Math. as it was more challenging.)</li>            
+                    <li>B.Sc. in Industrial Engineering, ~2011 (I changed my major to Applied Math.)</li>            
             </ul>
           </ul>
     </div>
@@ -140,7 +144,13 @@
   </h3>
   <div class="details">
     <ul class="custom">
-        <li>Teaching Assistant</li>
+      <li>Software Developer</li>
+      <ul class="custom-list">
+          <li>Design, Optimize, and C/C++ Developing in BPAS library (2017, present)</li>
+          <li>Front-end Java Developer in Isfahan Science and Technology Town (Summer 2015)</li>
+          <li>JavaScript and React Developer in MyCoffee application (Summer 2014)</li>
+      </ul>
+      <li>Teaching Assistant</li>
         <ul class="custom-list">
             <li>Game Design (Winter'19 UWO)</li>
             <li>Discrete Structures in Computing (Winter'18, Fall'19 UWO)</li>
@@ -150,12 +160,6 @@
             <li>Programming with SageMath and Maple (Fall'15, Fall'14 IUT)</li>
             <li>Probability and Statistics with R (Fall'13, Winter'12 IUT)</li>
         </ul>
-        <li>Software Developer</li>
-        <ul class="custom-list">
-            <li>C and C++ Developer in BPAS library (2017, cont.).</li>
-            <li>Front-end Java Developer in Isfahan Science and Technology Town (Summer 2015).</li>
-            <li>JavaScript and React Developer in MyCoffee application (Summer 2014).</li>
-          </ul>
         </ul>
 </div>
 </div>
