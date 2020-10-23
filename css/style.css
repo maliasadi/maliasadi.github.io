@@ -1,8 +1,8 @@
 /*
  * Template Name: Ali's Blog
- * Version: 0.2
- * Author: @maliasadi
- * Copyright: Feel free to use this css style, and, don't forget to *Star* the repository
+ * Version: 0.3
+ * Author: Mohammadali (Ali) Asadi @ssecurve
+ * Copyright: Feel free to use this css style, if you find it useful! 
  * Github: https://github.com/maliasadi
 */
 @charset 'UTF-8';
@@ -200,7 +200,7 @@ section:last-child, article:last-child {
 /***************/
 
 .fa {
-    font-size: 35px;
+    font-size: 30px;
     width: 40px;
     text-decoration: none;
     margin: 0px 0px;
