@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+
+const posts = await getPosts();
+---
+
+<Base title="Blog" description="Notes by Ali Asadi on quantum computing, quantum software, high-performance computing, and AI.">
+  <div class="wrap">
+    <header class="page-hero">
+      <p class="kicker"><span class="dot" aria-hidden="true"></span>Notes</p>
+      <h1>Blog</h1>
+      <p class="lead">Dates, tags, and the note itself.</p>
+    </header>
+    <PostList posts={posts} />
+  </div>
+</Base>

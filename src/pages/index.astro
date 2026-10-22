@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { getPosts } from '../lib/posts';
+import { getTalks } from '../lib/talks';
+import { formatDate, isoDate } from '../lib/dates';
+
+const posts = (await getPosts()).slice(0, 3);
+const talks = getTalks().slice(0, 3);
+const description =
+  'Ali Asadi is a scientific computing tinkerer. He crafts the compilers and simulators that make classical-quantum applications run fast.';
+---
+
+<Base title="Ali Asadi" description={description}>
+  <div class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker"><span class="dot" aria-hidden="true"></span>Toronto</p>
+        <h1>Ali Asadi</h1>
+        <p class="lead">
+          I am a scientific computing tinkerer. I craft the compilers and simulators that make
+          classical-quantum applications run fast.
+        </p>
+        <p class="lead-link">
+          <a href="https://linkedin.com/in/maliasadi">LinkedIn</a>
+          <a href="https://pennylane.ai/profile/maliasadi">PennyLane</a>
+          <a href="https://scholar.google.ca/citations?user=pUKiEEoAAAAJ&hl=en">Scholar</a>
+        </p>
+      </div>
+      <aside class="hero-aside">
+        <svg class="lattice" viewBox="0 0 240 210" fill="none" aria-hidden="true">
+          <path class="ring-dim" d="M120 16 34 194"></path>
+          <path class="ring" d="M120 16 206 194"></path>
+          <circle class="ring" cx="120" cy="124" r="24"></circle>
+          <path class="phase" d="M68 124h104"></path>
+        </svg>
+      </aside>
+    </section>
+
+    <section class="section" aria-labelledby="recent-posts">
+      <div class="section-head">
+        <h2 id="recent-posts">Recent posts</h2>
+        <a href="/blog/">All posts</a>
+      </div>
+      <PostList posts={posts} />
+    </section>
+
+    <section class="section" aria-labelledby="talks-heading">
+      <div class="section-head">
+        <h2 id="talks-heading">Talks</h2>
+        <a href="/talks/">All slides</a>
+      </div>
+      {
+        talks.length === 0 ? (
+          <p class="empty">No talks yet.</p>
+        ) : (
+          <ul class="list">
+            {talks.map((talk) => (
+              <li>
+                <a class="talk-card" href={talk.href}>
+                  <p class="entry-date">
+                    {talk.date ? <time datetime={isoDate(talk.date)}>{formatDate(talk.date)}</time> : 'Undated'}
+                  </p>
+                  <div>
+                    <h3 class="entry-title">{talk.title}</h3>
+                    <p class="talk-meta">
+                      {talk.venue}
+                    </p>
+                    {talk.description && <p class="entry-desc">{talk.description}</p>}
+                    <ul class="tags">
+                      {talk.sample && (
+                        <li>
+                          <span>Sample</span>
+                        </li>
+                      )}
+                      {talk.featured && (
+                        <li>
+                          <span>Featured</span>
+                        </li>
+                      )}
+                    </ul>
+                    <span class="talk-open">Open slides</span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</Base>

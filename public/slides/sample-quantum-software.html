@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sample: Quantum software, briefly</title>
+    <meta
+      name="description"
+      content="A sample deck of three slides. Replace this file with your own talk."
+    />
+    <meta name="talk-date" content="2026-10-22" />
+    <meta name="talk-venue" content="TODO: venue or event name" />
+    <meta name="talk-featured" content="true" />
+    <meta name="talk-sample" content="true" />
+    <link rel="stylesheet" href="/vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="/vendor/reveal/theme/white.css" />
+    <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+    <style>
+      :root {
+        --r-background-color: #f6f6f7;
+        --r-main-font: "Segoe UI", system-ui, sans-serif;
+        --r-heading-font: "Segoe UI", system-ui, sans-serif;
+        --r-main-color: #101114;
+        --r-heading-color: #101114;
+        --r-link-color: #0f766e;
+      }
+      .reveal { font-size: 32px; }
+      .reveal h1,
+      .reveal h2 {
+        font-weight: 560;
+        letter-spacing: -0.04em;
+        text-transform: none;
+      }
+      .reveal h1 { font-size: 1.7em; }
+      .kicker {
+        font-family: ui-monospace, monospace;
+        font-size: 0.36em;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #52525b;
+      }
+      .rule {
+        width: 3.2rem;
+        height: 3px;
+        margin: 1.1rem auto 0;
+        border: 0;
+        background: #0f766e;
+      }
+      .reveal .eq {
+        font-size: 0.95em;
+        margin-top: 0.8em;
+      }
+      .reveal .fine {
+        color: #52525b;
+        font-size: 0.72em;
+      }
+      .reveal section { text-align: left; }
+      .reveal .center { text-align: center; }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section class="center">
+          <p class="kicker">Sample deck</p>
+          <h1>Quantum software, briefly</h1>
+          <p>Ali Asadi</p>
+          <hr class="rule" />
+          <p class="fine">TODO: venue or event name</p>
+        </section>
+        <section>
+          <p class="kicker">One state</p>
+          <h2>A Bell pair</h2>
+          <p class="eq" id="bell">\[|\Phi^{+}\rangle = \frac{1}{\sqrt{2}}\left(|00\rangle + |11\rangle\right)\]</p>
+          <p class="fine">Two amplitudes, perfectly correlated measurements.</p>
+        </section>
+        <section>
+          <p class="kicker">Sample</p>
+          <h2>Replace this deck</h2>
+          <p>
+            This file is <code>public/slides/sample-quantum-software.html</code>.
+            Drop your own HTML file in the same folder and it joins the talks list.
+          </p>
+          <p class="fine">Arrow keys move between these three slides.</p>
+        </section>
+      </div>
+    </div>
+    <script src="/vendor/katex/katex.min.js"></script>
+    <script src="/vendor/katex/contrib/auto-render.min.js"></script>
+    <script src="/vendor/reveal/reveal.js"></script>
+    <script>
+      renderMathInElement(document.querySelector('.slides'), {
+        delimiters: [{ left: '\\[', right: '\\]', display: true }],
+        throwOnError: false,
+      });
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'fade',
+        center: false,
+        width: 1100,
+        height: 700,
+      });
+    </script>
+  </body>
+</html>

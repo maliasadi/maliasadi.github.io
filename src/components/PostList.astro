@@ -1,0 +1,44 @@
+---
+import type { Post } from '../lib/posts';
+import { formatDate, isoDate } from '../lib/dates';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+{
+  posts.length === 0 ? (
+    <p class="empty">No posts yet.</p>
+  ) : (
+    <ul class="list">
+      {posts.map((post) => (
+        <li>
+          <a class="entry" href={`/blog/${post.id}/`}>
+            <time class="entry-date" datetime={isoDate(post.data.date)}>
+              {formatDate(post.data.date)}
+            </time>
+            <div>
+              <h3 class="entry-title">{post.data.title}</h3>
+              <p class="entry-desc">{post.data.description}</p>
+              <ul class="tags">
+                {post.data.sample && (
+                  <li>
+                    <span>Sample</span>
+                  </li>
+                )}
+                {post.data.tags.map((tag) => (
+                  <li>
+                    <span>{tag}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

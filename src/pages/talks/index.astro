@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getTalks } from '../../lib/talks';
+import { formatDate, isoDate } from '../../lib/dates';
+
+const talks = getTalks();
+---
+
+<Base title="Talks" description="Slide decks by Ali Asadi.">
+  <div class="wrap">
+    <header class="page-hero">
+      <p class="kicker"><span class="dot" aria-hidden="true"></span>Slides</p>
+      <h1>Talks</h1>
+      <p class="lead">HTML decks, one file each. Open a talk to present it.</p>
+    </header>
+    {
+      talks.length === 0 ? (
+        <p class="empty">No slides yet. Add an HTML file to <code>public/slides/</code>.</p>
+      ) : (
+        <ul class="list">
+          {talks.map((talk) => (
+            <li>
+              <a class="talk-card" href={talk.href}>
+                <ul class="tags">
+                  {talk.sample && (
+                    <li>
+                      <span>Sample</span>
+                    </li>
+                  )}
+                  {talk.featured && (
+                    <li>
+                      <span>Featured</span>
+                    </li>
+                  )}
+                </ul>
+                <h3 class="entry-title">{talk.title}</h3>
+                <p class="talk-meta">
+                  {talk.date && <time datetime={isoDate(talk.date)}>{formatDate(talk.date)}</time>}
+                  {talk.date && talk.venue ? ' · ' : ''}
+                  {talk.venue}
+                </p>
+                {talk.description && <p class="entry-desc">{talk.description}</p>}
+                <span class="talk-open">Open slides</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    <p class="hint">
+      A new deck is one HTML file in <code>public/slides/</code>. The title, date, and venue come from tags inside that file. See the README.
+    </p>
+  </div>
+</Base>
