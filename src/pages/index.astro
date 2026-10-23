@@ -57,15 +57,14 @@ const description =
           <ul class="list">
             {talks.map((talk) => (
               <li>
-                <a class="talk-card" href={talk.href}>
+                <div class="talk-card">
+                  <a class="talk-cover" href={talk.href} aria-label={`Open slides: ${talk.title}`}></a>
                   <p class="entry-date">
                     {talk.date ? <time datetime={isoDate(talk.date)}>{formatDate(talk.date)}</time> : 'Undated'}
                   </p>
                   <div>
                     <h3 class="entry-title">{talk.title}</h3>
-                    <p class="talk-meta">
-                      {talk.venue}
-                    </p>
+                    {talk.venue && <p class="talk-meta">{talk.venue}</p>}
                     {talk.description && <p class="entry-desc">{talk.description}</p>}
                     <ul class="tags">
                       {talk.sample && (
@@ -80,8 +79,16 @@ const description =
                       )}
                     </ul>
                     <span class="talk-open">Open slides</span>
+                    {
+                      talk.paperUrl && (
+                        <p class="talk-source">
+                          Based on <a href={talk.paperUrl}>{talk.paperTitle}</a> (
+                          <a href={talk.paperUrl}>arXiv:{talk.paperId}</a>).
+                        </p>
+                      )
+                    }
                   </div>
-                </a>
+                </div>
               </li>
             ))}
           </ul>
