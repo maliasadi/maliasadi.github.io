@@ -9,6 +9,9 @@ export interface Talk {
   href: string;
   featured: boolean;
   sample: boolean;
+  paperTitle: string;
+  paperUrl: string;
+  paperId: string;
 }
 
 const SLIDES_DIR = path.join(process.cwd(), 'public', 'slides');
@@ -62,6 +65,9 @@ export function getTalks(): Talk[] {
         href: `/slides/${rel}`,
         featured: isTrue(metaContent(html, 'talk-featured')),
         sample: isTrue(metaContent(html, 'talk-sample')),
+        paperTitle: metaContent(html, 'talk-paper'),
+        paperUrl: metaContent(html, 'talk-paper-url'),
+        paperId: metaContent(html, 'talk-paper-id'),
       };
     })
     .sort((a, b) => {

@@ -62,13 +62,16 @@ Set the title and these tags in `<head>` so the gallery can label the talk:
 <meta name="talk-date" content="2026-10-22" />
 <meta name="talk-venue" content="Event name" />
 <meta name="talk-featured" content="true" />
+<meta name="talk-paper" content="Paper title" />
+<meta name="talk-paper-url" content="https://arxiv.org/abs/0000.00000" />
+<meta name="talk-paper-id" content="0000.00000" />
 ```
 
-`talk-featured` is optional. Featured talks are listed first on the home page. `talk-sample` is only for placeholders.
+`talk-featured` is optional. Featured talks are listed first on the home page. `talk-sample` is only for placeholders. Leave `talk-venue` out when the deck has no event. The paper tags are optional; when all three are set, the home page and the talks list add a link of the form “Based on [paper title] (arXiv:id)”.
 
-reveal.js and KaTeX are copied into `public/vendor/` when you run `npm run dev` or `npm run build`. A deck can point at `/vendor/reveal/reveal.css` and `/vendor/reveal/reveal.js`, which is what the sample does. Refresh the dev server after adding a file.
+reveal.js and KaTeX are copied into `public/vendor/` when you run `npm run dev` or `npm run build`. A deck can point at `/vendor/reveal/reveal.css` and `/vendor/reveal/reveal.js`. Refresh the dev server after adding a file.
 
-The sample deck is `public/slides/sample-quantum-software.html`. Delete it when you add a real talk.
+The deck in the repo is `public/slides/hybrid-quantum-programming-on-hpc.html`.
 
 ## Go live later
 

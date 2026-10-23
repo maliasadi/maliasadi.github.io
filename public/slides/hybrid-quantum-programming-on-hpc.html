@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>State-vector simulation on HPC platforms</title>
+    <meta
+      name="description"
+      content="How state-vector simulation uses SIMD, GPUs, and MPI, from one CPU socket to 512 GPUs."
+    />
+    <meta name="talk-date" content="2024-03-04" />
+    <meta name="talk-featured" content="true" />
+    <meta
+      name="talk-paper"
+      content="Hybrid quantum programming with PennyLane Lightning on HPC platforms"
+    />
+    <meta name="talk-paper-url" content="https://arxiv.org/abs/2403.02512" />
+    <meta name="talk-paper-id" content="2403.02512" />
+    <link rel="stylesheet" href="/vendor/reveal/reveal.css" />
+    <link rel="stylesheet" href="/vendor/reveal/theme/white.css" />
+    <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+    <style>
+      :root {
+        --ink: #101114;
+        --muted: #52525b;
+        --line: #e4e4e7;
+        --bg: #f6f6f7;
+        --card: #ffffff;
+        --accent: #0f766e;
+        --accent-soft: #ccfbf1;
+        --sky: #0369a1;
+        --sky-soft: #e0f2fe;
+      }
+      .reveal {
+        font-size: 30px;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      .reveal .slides {
+        text-align: left;
+      }
+      .reveal .slides section {
+        text-align: left;
+        padding: 0.2rem 0.15rem 0;
+        height: 100%;
+        box-sizing: border-box;
+      }
+      .reveal h1,
+      .reveal h2,
+      .reveal h3 {
+        font-weight: 560;
+        letter-spacing: -0.04em;
+        text-transform: none;
+        color: var(--ink);
+        margin: 0;
+        line-height: 1.08;
+      }
+      .reveal h1 { font-size: 1.55em; }
+      .reveal h2 { font-size: 1.18em; margin-bottom: 0.42em; }
+      .reveal h3 {
+        font-size: 0.62em;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.25em;
+      }
+      .reveal p,
+      .reveal li {
+        font-size: 0.58em;
+        line-height: 1.38;
+        margin: 0.28em 0;
+      }
+      .reveal ul {
+        margin: 0.15em 0 0;
+        padding-left: 1.05em;
+      }
+      .reveal a { color: var(--accent); }
+      .kicker {
+        font-family: ui-monospace, monospace;
+        font-size: 0.38em;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 0.55em;
+      }
+      .rule {
+        width: 3.2rem;
+        height: 3px;
+        margin: 0.85rem 0 0.9rem;
+        border: 0;
+        background: var(--accent);
+      }
+      .reveal .center { text-align: center; }
+      .reveal .center .rule { margin-left: auto; margin-right: auto; }
+      .lead {
+        font-size: 0.68em !important;
+        max-width: 34rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 0.42em !important;
+        line-height: 1.4;
+      }
+      .source {
+        margin-top: 0.9rem;
+        font-size: 0.46em !important;
+        color: var(--muted);
+      }
+      .split {
+        display: grid;
+        grid-template-columns: 1.12fr 0.88fr;
+        gap: 1.1rem;
+        align-items: center;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.7rem;
+        margin-top: 0.35rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 0.7rem;
+        padding: 0.75rem 0.8rem 0.85rem;
+        min-height: 11.5rem;
+      }
+      .card .num {
+        font-family: ui-monospace, monospace;
+        font-size: 0.42em;
+        letter-spacing: 0.14em;
+        color: var(--accent);
+        margin: 0 0 0.35rem;
+      }
+      .card p { margin: 0; }
+      .cols3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.7rem;
+      }
+      .backend {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--accent);
+        border-radius: 0.7rem;
+        padding: 0.7rem 0.75rem 0.8rem;
+      }
+      .backend.sky { border-top-color: var(--sky); }
+      .backend p { margin: 0.2rem 0; }
+      .backend .name {
+        font-size: 0.62em !important;
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        margin: 0 0 0.35rem;
+      }
+      .regimes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.65rem;
+        margin-top: 0.7rem;
+      }
+      .regime {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 0.7rem;
+        padding: 0.7rem 0.75rem;
+      }
+      .regime strong {
+        display: block;
+        font-size: 0.62em;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.25rem;
+      }
+      .regime span {
+        display: block;
+        font-size: 0.5em;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        padding: 0.85rem 1rem 0.95rem;
+      }
+      .stat b {
+        display: block;
+        font-size: 1.7em;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        color: var(--accent);
+      }
+      .stat em {
+        display: block;
+        margin-top: 0.35rem;
+        font-style: normal;
+        font-size: 0.55em;
+        font-weight: 600;
+      }
+      .stat span {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.46em;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      table.place {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.35rem;
+        font-size: 0.52em;
+      }
+      table.place th,
+      table.place td {
+        text-align: left;
+        vertical-align: top;
+        padding: 0.48rem 0.55rem;
+        border-bottom: 1px solid var(--line);
+      }
+      table.place th {
+        font-family: ui-monospace, monospace;
+        font-size: 0.78em;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      table.place td:first-child { width: 38%; font-weight: 600; }
+      svg text {
+        font-family: ui-monospace, monospace;
+        fill: var(--muted);
+      }
+      .caption {
+        margin: 0.35rem 0 0;
+        color: var(--muted);
+        font-size: 0.4em !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section class="center">
+          <p class="kicker">HPC talk</p>
+          <h1>State-vector simulation on HPC platforms</h1>
+          <hr class="rule" />
+          <p class="lead">
+            Hybrid quantum programs, run as memory-bound kernels on CPUs, GPUs, and MPI jobs.
+          </p>
+          <p class="source">
+            Based on
+            <a href="https://arxiv.org/abs/2403.02512"
+              >Hybrid quantum programming with PennyLane Lightning on HPC platforms</a
+            >
+            (<a href="https://arxiv.org/abs/2403.02512">arXiv:2403.02512</a>).
+          </p>
+        </section>
+
+        <section>
+          <p class="kicker">The working set</p>
+          <h2>The state vector is the working set</h2>
+          <div class="split">
+            <div>
+              <ul>
+                <li>An <em>n</em>-qubit circuit is a vector of 2<sup>n</sup> complex amplitudes. One more qubit doubles it.</li>
+                <li>At 24 qubits, with thousands of parameters, the paper says the memory is already hundreds of gigabytes.</li>
+                <li>Differentiating every gate on top of that vector is what makes a hybrid loop expensive. The simulators keep the device a black box and hand the framework a custom gradient.</li>
+              </ul>
+            </div>
+            <div>
+              <svg viewBox="0 0 460 250" role="img" aria-label="Four bars, each twice the last, showing that one added qubit doubles the state vector. The only stated size is hundreds of gigabytes at 24 qubits.">
+                <rect x="28" y="176" width="54" height="28" rx="4" fill="#ccfbf1" stroke="#0f766e"></rect>
+                <rect x="108" y="148" width="54" height="56" rx="4" fill="#99f6e4" stroke="#0f766e"></rect>
+                <rect x="188" y="92" width="54" height="112" rx="4" fill="#5eead4" stroke="#0f766e"></rect>
+                <rect x="268" y="20" width="54" height="184" rx="4" fill="#0f766e"></rect>
+                <text x="55" y="222" text-anchor="middle" font-size="13">n</text>
+                <text x="135" y="222" text-anchor="middle" font-size="13">n+1</text>
+                <text x="215" y="222" text-anchor="middle" font-size="13">n+2</text>
+                <text x="295" y="222" text-anchor="middle" font-size="13">n+3</text>
+                <text x="360" y="78" font-size="13" fill="#101114">×2 each qubit</text>
+                <text x="360" y="100" font-size="13">shape only</text>
+              </svg>
+              <p class="caption">Stated size, not bar height: 24 qubits and thousands of parameters can take hundreds of gigabytes.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <p class="kicker">Workload shapes</p>
+          <h2>Three ways the work shows up</h2>
+          <div class="cards">
+            <article class="card">
+              <p class="num">01 · Task parallel</p>
+              <h3>Many small circuits</h3>
+              <p>Independent fragments, each happy with a slice of a GPU. Schedule them. Do not invent a bigger vector than the fragment needs.</p>
+            </article>
+            <article class="card">
+              <p class="num">02 · One device</p>
+              <h3>Fill a socket or a GPU</h3>
+              <p>One circuit owns the CPU socket or the local GPU. Kernel choice and overheads decide the runtime.</p>
+            </article>
+            <article class="card">
+              <p class="num">03 · Distributed</p>
+              <h3>The vector does not fit</h3>
+              <p>Multi-GPU or multi-node. The state is partitioned, and gates that touch remote amplitudes pay for the network.</p>
+            </article>
+          </div>
+          <p class="fine">The paper sets out to cover these three. A fourth, mixing them in one job, is left for later.</p>
+        </section>
+
+        <section>
+          <p class="kicker">Kernel</p>
+          <h2>A gate is a streaming update</h2>
+          <div class="split">
+            <ul>
+              <li>A one-qubit gate touches disjoint pairs of amplitudes. Indices come from bit masks, so the 2<sup>n</sup>×2<sup>n</sup> matrix is never built.</li>
+              <li>Disjoint pairs are a parallel loop. OpenMP on the gate is a compile-time option.</li>
+              <li>An <em>n</em>-controlled gate skips every amplitude whose controls are off, so the paper expects about 2<sup>−n</sup> the time of the uncontrolled kernel.</li>
+              <li>Hand-written kernels cover 1 to 4 qubits. Past that, a general kernel takes over.</li>
+            </ul>
+            <svg viewBox="0 0 420 250" role="img" aria-label="Two pairs of amplitudes updated in parallel by the same small gate, with no full matrix stored.">
+              <rect x="16" y="36" width="150" height="178" rx="10" fill="#ffffff" stroke="#e4e4e7"></rect>
+              <text x="91" y="62" text-anchor="middle" font-size="13" fill="#101114">state vector</text>
+              <circle cx="58" cy="100" r="12" fill="#ccfbf1" stroke="#0f766e"></circle>
+              <circle cx="124" cy="100" r="12" fill="#ccfbf1" stroke="#0f766e"></circle>
+              <circle cx="58" cy="156" r="12" fill="#e0f2fe" stroke="#0369a1"></circle>
+              <circle cx="124" cy="156" r="12" fill="#e0f2fe" stroke="#0369a1"></circle>
+              <path d="M136 100 H188" stroke="#0f766e" stroke-width="2"></path>
+              <path d="M136 156 H188" stroke="#0369a1" stroke-width="2"></path>
+              <rect x="188" y="78" width="92" height="44" rx="8" fill="#0f766e"></rect>
+              <rect x="188" y="134" width="92" height="44" rx="8" fill="#0369a1"></rect>
+              <text x="234" y="105" text-anchor="middle" font-size="13" fill="#ffffff">thread A</text>
+              <text x="234" y="161" text-anchor="middle" font-size="13" fill="#ffffff">thread B</text>
+              <text x="300" y="230" font-size="13">pairs do not overlap</text>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <p class="kicker">Backends</p>
+          <h2>One interface, three backends</h2>
+          <div class="cols3">
+            <article class="backend">
+              <p class="name">lightning.qubit</p>
+              <p>C++17/20 on the CPU. OpenMP over observables, and optionally over the gate.</p>
+              <p>At runtime the x86_64 build picks a portable kernel, AVX2, or AVX-512. No recompile.</p>
+            </article>
+            <article class="backend sky">
+              <p class="name">lightning.gpu</p>
+              <p>NVIDIA cuQuantum on CUDA compute capability 7.0 and newer.</p>
+              <p>The same API runs distributed, through MPI and cuStateVec, including adjoint gradients.</p>
+            </article>
+            <article class="backend">
+              <p class="name">lightning.kokkos</p>
+              <p>The same kernels in Kokkos: OpenMP, CUDA from Pascal through Ampere, and ROCm on Instinct MI100 and MI200.</p>
+              <p>Useful when the CPU has many cores and few observables, or the GPU is not NVIDIA.</p>
+            </article>
+          </div>
+          <p class="fine">Every backend is templated on 32-bit or 64-bit floats, from Python down to the kernel. The benchmarks below are double precision.</p>
+        </section>
+
+        <section>
+          <p class="kicker">CPU microbenchmark</p>
+          <h2>SIMD helps until the cache says no</h2>
+          <ul>
+            <li>30-qubit RX gate, C++ binary, double precision, Sapphire Rapids on an EC2 R7i.16xlarge (32 physical cores).</li>
+            <li>AVX-512 beats AVX2 and the portable kernel at 1, 4, and 16 threads.</li>
+            <li>At higher thread counts the portable kernel wins. <code>perf c2c</code> pointed at cache eviction from extra loads and stores.</li>
+            <li>Streaming stores (<code>_mm512_stream_pd</code> in place of <code>_mm512_store_pd</code>) give AVX-512 the lead back when the thread count is high.</li>
+          </ul>
+          <div class="regimes">
+            <div class="regime">
+              <strong>1, 4, 16 threads</strong>
+              <span>AVX-512 ahead of AVX2 and the portable kernel.</span>
+            </div>
+            <div class="regime">
+              <strong>Higher thread counts</strong>
+              <span>Portable kernel leads. Intrinsics saturate.</span>
+            </div>
+            <div class="regime">
+              <strong>Streaming stores</strong>
+              <span>AVX-512 recovers at high thread counts.</span>
+            </div>
+          </div>
+          <p class="caption">Same machine, Hadamard, RX, and CNOT against other simulators: best single-thread time and the lowest variance. At the top thread count the spread is on the order of 10<sup>−3</sup> seconds.</p>
+        </section>
+
+        <section>
+          <p class="kicker">Why the 1-thread number matters</p>
+          <h2>Gradients are the real workload</h2>
+          <div class="cards">
+            <article class="card">
+              <p class="num">Adjoint</p>
+              <h3>Linear in the gates</h3>
+              <p>Adjoint differentiation applies each parametric gate a constant number of times. Parameter-shift and finite differences are quadratic in the parameter count.</p>
+            </article>
+            <article class="card">
+              <p class="num">OpenMP</p>
+              <h3>One thread per observable</h3>
+              <p>The gradient farms observables out as OpenMP threads. Inside each thread the kernel is often single-threaded, so the 1-thread SIMD result is the one the pipeline multiplies.</p>
+            </article>
+            <article class="card">
+              <p class="num">Do not compare naively</p>
+              <h3>Different complexity</h3>
+              <p>A simulator without this gradient path is solving a harder loop. The paper treats that as an unfair comparison, not a missing speedup.</p>
+            </article>
+          </div>
+        </section>
+
+        <section>
+          <p class="kicker">Single node · VQE</p>
+          <h2>Where the GPU overtakes the CPU</h2>
+          <div class="split">
+            <div>
+              <ul>
+                <li>Energy plus gradient, 10 times, release v0.34.0. CPU side: 32-core AMD EPYC Milan, up to 32 threads, AVX2 dispatch.</li>
+                <li>GPU side: a 40&nbsp;GB NVIDIA A100, and Kokkos built for CUDA.</li>
+                <li>Under 20 qubits, overheads win and the CPU backend is the fastest.</li>
+                <li>H<sub>2</sub>, CC-PVDZ: 20 qubits, 2,951 Hamiltonian terms, GPUs about 2×.</li>
+                <li>C<sub>2</sub>H<sub>2</sub>: 24 qubits, 6,401 terms. The two GPU backends match, and both are around 7× Lightning-Qubit on Sapphire Rapids.</li>
+              </ul>
+            </div>
+            <svg viewBox="0 0 440 280" role="img" aria-label="Relative GPU speedup versus the CPU backend: about 2 times at 20 qubits and around 7 times at 24 qubits. Below 20 qubits the CPU is faster.">
+              <line x1="48" y1="28" x2="48" y2="230" stroke="#e4e4e7"></line>
+              <line x1="48" y1="230" x2="400" y2="230" stroke="#e4e4e7"></line>
+              <rect x="108" y="176" width="78" height="54" rx="5" fill="#0369a1"></rect>
+              <rect x="250" y="30" width="78" height="200" rx="5" fill="#0f766e"></rect>
+              <text x="147" y="168" text-anchor="middle" font-size="16" fill="#101114">2×</text>
+              <text x="289" y="22" text-anchor="middle" font-size="16" fill="#101114">~7×</text>
+              <text x="147" y="252" text-anchor="middle" font-size="13">20 qubits</text>
+              <text x="147" y="268" text-anchor="middle" font-size="12">2,951 terms</text>
+              <text x="289" y="252" text-anchor="middle" font-size="13">24 qubits</text>
+              <text x="289" y="268" text-anchor="middle" font-size="12">6,401 terms</text>
+              <text x="56" y="234" font-size="12">1× CPU</text>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <p class="kicker">Task farm · Perlmutter</p>
+          <h2>Forty-five thousand independent circuits</h2>
+          <div class="stats">
+            <div class="stat">
+              <b>79</b>
+              <em>qubits, before the cut</em>
+              <span>QAOA MaxCut, one layer. Three clusters of 25 nodes, two edges between clusters.</span>
+            </div>
+            <div class="stat">
+              <b>45,711</b>
+              <em>fragments, 27–29 qubits</em>
+              <span>Circuit cutting, not counting the offset identity. Each fragment is its own GPU task.</span>
+            </div>
+          </div>
+          <ul>
+            <li>lightning.gpu and Ray on Perlmutter, from 1 to 64 nodes, which is 4 to 256 GPUs.</li>
+            <li>Packing a batch of fragments onto each GPU beat allocating memory on demand for every circuit.</li>
+            <li>The batched schedule reaches about 80 circuits per second at 256 GPUs.</li>
+          </ul>
+        </section>
+
+        <section>
+          <p class="kicker">Distributed VQE · LUMI</p>
+          <h2>One molecule, many GPUs</h2>
+          <ul>
+            <li>C<sub>2</sub>H<sub>4</sub> with no term grouping: a 28-qubit ansatz, over 3,000 gates, and close to 9,000 Pauli words.</li>
+            <li>Each word is an independent expectation. lightning.kokkos on HIP, with an mpi4py process pool, farms the observables across LUMI.</li>
+            <li>The runs take at most 10 optimizer steps. Energies matched on every distribution that finished.</li>
+            <li>One node, 8 GPUs, hit the 48-hour wall clock. That point is not a full measurement: it is estimated from the mean and standard deviation of 8 completed steps. The larger node counts use the measured times.</li>
+          </ul>
+          <p class="fine">This is task parallelism over the Hamiltonian, not one state vector sliced across ranks. The next slide is the other kind of MPI.</p>
+        </section>
+
+        <section>
+          <p class="kicker">MPI state vector · Perlmutter</p>
+          <h2>When one vector spans the cluster</h2>
+          <div class="stats">
+            <div class="stat">
+              <b>8%</b>
+              <em>weak-scaling efficiency, sampling</em>
+              <span>10<sup>4</sup> shots of a strongly entangling layered circuit. Largest run: 256 GPUs.</span>
+            </div>
+            <div class="stat">
+              <b>30%</b>
+              <em>weak-scaling efficiency, gradients</em>
+              <span>Adjoint Jacobian, one Pauli-Z per qubit. Largest run: 512 GPUs.</span>
+            </div>
+          </div>
+          <p>
+            80&nbsp;GB A100s, Cray MPICH, CUDA 11.7, December 2023. Elsewhere the paper’s examples reach 30 qubits on one device, a 36-qubit MPI illustration, and 41 qubits across nodes.
+          </p>
+          <p class="fine">The distributed GPU backend returns that adjoint Jacobian. The paper presents it as the distributed state-vector implementation that supports this gradient.</p>
+        </section>
+
+        <section>
+          <p class="kicker">Scheduling</p>
+          <h2>Place the job by its memory</h2>
+          <table class="place">
+            <thead>
+              <tr>
+                <th>What you have</th>
+                <th>What the paper’s numbers say</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Under 20 qubits</td>
+                <td>CPU. Overheads make the GPU slower. Thread the observables, and let the runtime pick AVX2 or AVX-512.</td>
+              </tr>
+              <tr>
+                <td>20–24 qubits, thousands of terms</td>
+                <td>One GPU. About 2× at 20 qubits and 2,951 terms, around 7× at 24 qubits and 6,401 terms.</td>
+              </tr>
+              <tr>
+                <td>Tens of thousands of fragments</td>
+                <td>Batch them. 45,711 fragments reached about 80 circuits per second on 256 GPUs. On-demand allocation did worse.</td>
+              </tr>
+              <tr>
+                <td>One vector past a device</td>
+                <td>MPI. Budget for weak-scaling efficiency of 8% (sampling, 256 GPUs) or 30% (gradients, 512 GPUs), out to 41 qubits in these examples.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <p class="kicker">Takeaways</p>
+          <h2>What to take back to the machine</h2>
+          <ul>
+            <li>The hot loop is a streaming update of disjoint amplitude pairs. SIMD is the first lever. Streaming stores are the second, once cache traffic wins.</li>
+            <li>Hybrid programs spend their time in gradients. Adjoint mode keeps that linear, and the useful parallelism is one observable per thread.</li>
+            <li>Past one GPU, a task farm and a distributed state vector are different machines. The farm scaled to about 80 circuits per second. The distributed vector held 8% and 30% weak-scaling efficiency.</li>
+          </ul>
+          <p class="source">
+            Based on
+            <a href="https://arxiv.org/abs/2403.02512"
+              >Hybrid quantum programming with PennyLane Lightning on HPC platforms</a
+            >
+            (<a href="https://arxiv.org/abs/2403.02512">arXiv:2403.02512</a>).
+          </p>
+        </section>
+      </div>
+    </div>
+    <script src="/vendor/katex/katex.min.js"></script>
+    <script src="/vendor/katex/contrib/auto-render.min.js"></script>
+    <script src="/vendor/reveal/reveal.js"></script>
+    <script>
+      renderMathInElement(document.querySelector('.slides'), {
+        delimiters: [{ left: '\\[', right: '\\]', display: true }],
+        throwOnError: false,
+      });
+      Reveal.initialize({
+        hash: true,
+        slideNumber: 'c/t',
+        transition: 'fade',
+        center: false,
+        width: 1100,
+        height: 700,
+      });
+    </script>
+  </body>
+</html>

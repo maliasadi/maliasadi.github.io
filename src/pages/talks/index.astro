@@ -20,7 +20,8 @@ const talks = getTalks();
         <ul class="list">
           {talks.map((talk) => (
             <li>
-              <a class="talk-card" href={talk.href}>
+              <div class="talk-card talk-stack">
+                <a class="talk-cover" href={talk.href} aria-label={`Open slides: ${talk.title}`}></a>
                 <ul class="tags">
                   {talk.sample && (
                     <li>
@@ -41,7 +42,15 @@ const talks = getTalks();
                 </p>
                 {talk.description && <p class="entry-desc">{talk.description}</p>}
                 <span class="talk-open">Open slides</span>
-              </a>
+                {
+                  talk.paperUrl && (
+                    <p class="talk-source">
+                      Based on <a href={talk.paperUrl}>{talk.paperTitle}</a> (
+                      <a href={talk.paperUrl}>arXiv:{talk.paperId}</a>).
+                    </p>
+                  )
+                }
+              </div>
             </li>
           ))}
         </ul>
