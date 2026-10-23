@@ -1,6 +1,6 @@
 ---
 title: "A short introduction"
-description: "Compilers, simulators, a piano, and a squash court."
+description: "Compilers, simulators, tech and gizmos, a piano, and a squash court."
 date: 2026-10-22
 tags: ["quantum"]
 ---
