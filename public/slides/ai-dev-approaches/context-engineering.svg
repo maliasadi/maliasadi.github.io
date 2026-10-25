@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="280" viewBox="0 0 920 280" role="img" aria-labelledby="title desc">
+  <title id="title">Context engineering</title>
+  <desc id="desc">Each model call gets the smallest high-signal set of tokens, then the set is curated again.</desc>
+  <rect width="920" height="280" fill="#f6f6f7"/>
+
+  <defs>
+    <marker id="fwd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1.4 8.6 5 1 8.6Z" fill="#0f766e"/>
+    </marker>
+    <marker id="back" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1.4 8.6 5 1 8.6Z" fill="#0369a1"/>
+    </marker>
+  </defs>
+
+<text x="28" y="36" fill="#101114" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="650">Context engineering</text>
+<g>
+<rect x="28" y="58" width="196" height="112" rx="14" fill="#ffffff" stroke="#e4e4e7"/>
+<rect x="28" y="58" width="196" height="5" rx="2" fill="#0f766e"/>
+<text x="44" y="88" fill="#0f766e" font-family="ui-monospace, monospace" font-size="13" letter-spacing="1.4">01</text>
+<text x="44" y="114" fill="#101114" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="650">Gather</text>
+<text x="44" y="138" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Notes, files, tools,</text>
+<text x="44" y="156" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">and the conversation.</text>
+</g>
+<line x1="228" y1="114.0" x2="244" y2="114.0" stroke="#0f766e" stroke-width="2.2" marker-end="url(#fwd)"/>
+<g>
+<rect x="252" y="58" width="196" height="112" rx="14" fill="#ffffff" stroke="#e4e4e7"/>
+<rect x="252" y="58" width="196" height="5" rx="2" fill="#0f766e"/>
+<text x="268" y="88" fill="#0f766e" font-family="ui-monospace, monospace" font-size="13" letter-spacing="1.4">02</text>
+<text x="268" y="114" fill="#101114" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="650">Select</text>
+<text x="268" y="138" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Keep the smallest</text>
+<text x="268" y="156" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">set that can work.</text>
+</g>
+<line x1="452" y1="114.0" x2="468" y2="114.0" stroke="#0f766e" stroke-width="2.2" marker-end="url(#fwd)"/>
+<g>
+<rect x="476" y="58" width="196" height="112" rx="14" fill="#ffffff" stroke="#e4e4e7"/>
+<rect x="476" y="58" width="196" height="5" rx="2" fill="#0f766e"/>
+<text x="492" y="88" fill="#0f766e" font-family="ui-monospace, monospace" font-size="13" letter-spacing="1.4">03</text>
+<text x="492" y="114" fill="#101114" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="650">Run</text>
+<text x="492" y="138" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">The model acts</text>
+<text x="492" y="156" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">on that window only.</text>
+</g>
+<line x1="676" y1="114.0" x2="692" y2="114.0" stroke="#0f766e" stroke-width="2.2" marker-end="url(#fwd)"/>
+<g>
+<rect x="700" y="58" width="196" height="112" rx="14" fill="#ffffff" stroke="#e4e4e7"/>
+<rect x="700" y="58" width="196" height="5" rx="2" fill="#0f766e"/>
+<text x="716" y="88" fill="#0f766e" font-family="ui-monospace, monospace" font-size="13" letter-spacing="1.4">04</text>
+<text x="716" y="114" fill="#101114" font-family="ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="650">Curate</text>
+<text x="716" y="138" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">Compact, take notes,</text>
+<text x="716" y="156" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">or fetch the next file.</text>
+</g>
+<path d="M798.0 172 V198 H126.0 V176" fill="none" stroke="#0369a1" stroke-width="2.2" marker-end="url(#back)"/>
+<text x="460" y="190" text-anchor="middle" fill="#0369a1" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">the next turn gets a new cut</text>
+<text x="28" y="262" fill="#52525b" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13">Anthropic, September 2025: context engineering curates the window on every turn. Context rots as it grows.</text>
+</svg>

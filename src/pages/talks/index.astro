@@ -11,7 +11,7 @@ const talks = getTalks();
     <header class="page-hero">
       <p class="kicker"><span class="dot" aria-hidden="true"></span>Slides</p>
       <h1>Talks</h1>
-      <p class="lead">HTML decks, one file each. Open a talk to present it.</p>
+      <p class="lead">HTML decks, one file each. A talk is for presenting. A study deck is for reading later.</p>
     </header>
     {
       talks.length === 0 ? (
@@ -21,7 +21,7 @@ const talks = getTalks();
           {talks.map((talk) => (
             <li>
               <div class="talk-card talk-stack">
-                <a class="talk-cover" href={talk.href} aria-label={`Open slides: ${talk.title}`}></a>
+                <a class="talk-cover" href={talk.href} aria-label={`${talk.notes ? 'Open notes' : 'Open slides'}: ${talk.title}`}></a>
                 <ul class="tags">
                   {talk.sample && (
                     <li>
@@ -33,6 +33,11 @@ const talks = getTalks();
                       <span>Featured</span>
                     </li>
                   )}
+                  {talk.notes && (
+                    <li>
+                      <span>Study notes</span>
+                    </li>
+                  )}
                 </ul>
                 <h3 class="entry-title">{talk.title}</h3>
                 <p class="talk-meta">
@@ -41,7 +46,7 @@ const talks = getTalks();
                   {talk.venue}
                 </p>
                 {talk.description && <p class="entry-desc">{talk.description}</p>}
-                <span class="talk-open">Open slides</span>
+                <span class="talk-open">{talk.notes ? 'Open notes' : 'Open slides'}</span>
                 {
                   talk.paperUrl && (
                     <p class="talk-source">
