@@ -9,6 +9,7 @@ export interface Talk {
   href: string;
   featured: boolean;
   sample: boolean;
+  notes: boolean;
   paperTitle: string;
   paperUrl: string;
   paperId: string;
@@ -65,6 +66,7 @@ export function getTalks(): Talk[] {
         href: `/slides/${rel}`,
         featured: isTrue(metaContent(html, 'talk-featured')),
         sample: isTrue(metaContent(html, 'talk-sample')),
+        notes: isTrue(metaContent(html, 'talk-notes')),
         paperTitle: metaContent(html, 'talk-paper'),
         paperUrl: metaContent(html, 'talk-paper-url'),
         paperId: metaContent(html, 'talk-paper-id'),
