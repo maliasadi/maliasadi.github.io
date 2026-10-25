@@ -28,7 +28,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Bare "22" uses the runner image cache. That cache is still
+          # 22.23.3, and Astro 7.4.2 exits unless Node is >=22.23.4.
+          node-version: '22.23.4'
           cache: npm
       - name: Install
         run: npm ci
