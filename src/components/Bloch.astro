@@ -1,0 +1,33 @@
+---
+interface Props {
+  class?: string;
+  color: string;
+  x: number;
+  y: number;
+  dir?: 'up' | 'down' | 'right';
+  r?: number;
+  arrowClass?: string;
+}
+
+const { color, x, y, dir = 'up', r = 22, arrowClass = 'arrow' } = Astro.props;
+const cls = Astro.props.class ?? '';
+const shaft = r - 4;
+const tip =
+  dir === 'up' ? [0, -shaft] : dir === 'down' ? [0, shaft] : [shaft, 0];
+const head =
+  dir === 'up'
+    ? `${tip[0]},${tip[1] - 6} ${tip[0] - 6},${tip[1] + 4} ${tip[0] + 6},${tip[1] + 4}`
+    : dir === 'down'
+      ? `${tip[0]},${tip[1] + 6} ${tip[0] - 6},${tip[1] - 4} ${tip[0] + 6},${tip[1] - 4}`
+      : `${tip[0] + 6},${tip[1]} ${tip[0] - 4},${tip[1] - 6} ${tip[0] - 4},${tip[1] + 6}`;
+---
+
+<g class:list={['bloch', cls]} transform={`translate(${x}, ${y})`}>
+  <circle r={r} fill={`${color}0d`} stroke={color} stroke-width="1.3"></circle>
+  <ellipse rx={r} ry={Math.round(r * 0.36)} fill="none" stroke={color} stroke-width="0.8" opacity="0.55"></ellipse>
+  <ellipse rx={Math.round(r * 0.36)} ry={r} fill="none" stroke={color} stroke-width="0.7" opacity="0.35"></ellipse>
+  <g class={arrowClass}>
+    <line x1="0" y1="0" x2={tip[0]} y2={tip[1]} stroke={color} stroke-width="2"></line>
+    <polygon points={head} fill={color}></polygon>
+  </g>
+</g>
