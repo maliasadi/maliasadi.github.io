@@ -1,71 +1,28 @@
 :root {
-  color-scheme: light;
-  --bg: #f6f6f7;
-  --bg-raise: #ffffff;
-  --text: #101114;
-  --muted: #52525b;
-  --line: #e4e4e7;
-  --code-bg: #ececee;
-  --focus: #0f766e;
-  --accent: #0f766e;
-  --accent-2: #0369a1;
-  --chip: #ececef;
-  --grid: rgb(16 17 20 / 5%);
-  --glow: rgb(15 118 110 / 12%);
+  color-scheme: dark;
+  --bg: #071018;
+  --bg-raise: #0d1a28;
+  --bg-2: #0b1622;
+  --text: #f2f4f8;
+  --muted: #8b95a8;
+  --line: rgba(232, 237, 245, 0.12);
+  --code-bg: #122033;
+  --focus: #4FD1E8;
+  --accent: #4FD1E8;
+  --accent-2: #E8B04B;
+  --gold: #E8B04B;
+  --gold-muted: #D4A353;
+  --cyan: #4FD1E8;
+  --chip: #122033;
+  --grid: rgb(232 237 245 / 4%);
+  --glow: rgb(79 209 232 / 12%);
   --sans: "Instrument Sans Variable", "Instrument Sans", "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --math: "STIX Two Text", "DejaVu Sans Mono", "IBM Plex Mono", serif;
   --page: 72rem;
   --prose: 42rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #09090b;
-    --bg-raise: #141417;
-    --text: #f4f4f5;
-    --muted: #a1a1aa;
-    --line: #27272a;
-    --code-bg: #1c1c21;
-    --focus: #5eead4;
-    --accent: #2dd4bf;
-    --accent-2: #7dd3fc;
-    --chip: #1c1c21;
-    --grid: rgb(244 244 245 / 5%);
-    --glow: rgb(45 212 191 / 14%);
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #09090b;
-  --bg-raise: #141417;
-  --text: #f4f4f5;
-  --muted: #a1a1aa;
-  --line: #27272a;
-  --code-bg: #1c1c21;
-  --focus: #5eead4;
-  --accent: #2dd4bf;
-  --accent-2: #7dd3fc;
-  --chip: #1c1c21;
-  --grid: rgb(244 244 245 / 5%);
-  --glow: rgb(45 212 191 / 14%);
-}
-
-:root[data-theme="light"] {
-  color-scheme: light;
-  --bg: #f6f6f7;
-  --bg-raise: #ffffff;
-  --text: #101114;
-  --muted: #52525b;
-  --line: #e4e4e7;
-  --code-bg: #ececee;
-  --focus: #0f766e;
-  --accent: #0f766e;
-  --accent-2: #0369a1;
-  --chip: #ececef;
-  --grid: rgb(16 17 20 / 5%);
-  --glow: rgb(15 118 110 / 12%);
+  --header-h: 56px;
+  --side-w: 76px;
 }
 
 *,
@@ -76,24 +33,25 @@
 
 html {
   background: var(--bg);
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: var(--text);
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 55% 42% at 100% -8%, var(--glow), transparent 60%),
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: auto, 4.5rem 4.5rem, 4.5rem 4.5rem;
-  background-position: center, -1px -1px, -1px -1px;
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(79, 209, 232, 0.07), transparent 50%),
+    radial-gradient(ellipse 70% 45% at 90% 10%, rgba(232, 176, 75, 0.06), transparent 50%);
   font-family: var(--sans);
   font-size: 1.0625rem;
   line-height: 1.65;
   font-feature-settings: "ss01", "cv11";
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 img {
@@ -148,10 +106,10 @@ a {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 5;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
 }
 
 .header-inner {
@@ -159,8 +117,8 @@ a {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem 1.15rem;
-  min-height: 4rem;
-  padding-block: 0.55rem;
+  min-height: var(--header-h);
+  padding-block: 0;
 }
 
 .brand {
@@ -168,10 +126,11 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.98rem;
-  font-weight: 560;
-  letter-spacing: -0.03em;
+  font-size: 0.95rem;
+  font-weight: 550;
+  letter-spacing: -0.02em;
   text-decoration: none;
+  color: var(--text);
 }
 
 .mark {
@@ -208,12 +167,13 @@ a {
 }
 
 .nav a[aria-current="page"] {
-  color: var(--text);
+  color: var(--cyan);
   background: var(--bg-raise);
   box-shadow: inset 0 0 0 1px var(--line);
 }
 
-.theme-toggle {
+.theme-toggle { display: none; }
+.theme-toggle-legacy {
   width: 2.4rem;
   height: 2.4rem;
   display: grid;
@@ -250,8 +210,10 @@ a {
 }
 
 main {
+  flex: 1 0 auto;
   padding-bottom: 4.5rem;
 }
+body.story main { padding-bottom: 0; }
 
 .hero {
   display: grid;
@@ -270,15 +232,15 @@ main {
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--cyan);
 }
 
 .dot {
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+  background: var(--gold);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold) 18%, transparent);
 }
 
 h1,
@@ -488,8 +450,9 @@ h1 {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--gold-muted);
   background: var(--chip);
+  border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.18rem 0.5rem;
 }
@@ -507,6 +470,17 @@ h1 {
 .article {
   width: min(var(--prose), 100%);
   padding-top: 3.2rem;
+}
+.article a,
+.page-hero + p a,
+.back-link {
+  color: var(--cyan);
+  text-decoration: none;
+}
+.back-link:hover,
+.article a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .dek {
@@ -551,6 +525,7 @@ h1 {
 }
 
 .prose :where(a) {
+  color: var(--cyan);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
@@ -636,7 +611,12 @@ h1 {
 }
 
 .site-footer a {
-  color: inherit;
+  color: var(--cyan);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 .empty,
@@ -653,6 +633,18 @@ h1 {
   font-size: 0.95rem;
   max-width: var(--prose);
   margin-top: 1.4rem;
+}
+.publications {
+  margin: 1.4rem 0 0;
+  font-size: 0.95rem;
+}
+.publications a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+.publications a:hover, .publications a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 @media (max-width: 800px) {

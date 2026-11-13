@@ -1,19 +1,26 @@
 ---
 import '../styles/global.css';
+import '../styles/story.css';
 import '@fontsource-variable/instrument-sans';
 import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource/stix-two-text/400.css';
+import '@fontsource/stix-two-text/500.css';
 import 'katex/dist/katex.min.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SiteRail from '../components/SiteRail.astro';
+import ContactModal from '../components/ContactModal.astro';
 
 interface Props {
   title: string;
   description: string;
+  story?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, story = false } = Astro.props;
 const fullTitle = title === 'Ali Asadi' ? title : `${title} · Ali Asadi`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const themeColor = '#071018';
 ---
 
 <!doctype html>
@@ -30,25 +37,20 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#f6f6f7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content={themeColor} />
     <script is:inline>
-      (function () {
-        try {
-          var stored = localStorage.getItem('theme');
-          if (stored === 'light' || stored === 'dark') {
-            document.documentElement.setAttribute('data-theme', stored);
-          }
-        } catch (e) {}
-      })();
+      document.documentElement.setAttribute('data-theme', 'dark');
     </script>
   </head>
-  <body>
+  <body class:list={[story && 'story']}>
     <a class="skip" href="#content">Skip to content</a>
+    <div class="progress" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
     <Header />
+    <SiteRail />
     <main id="content">
       <slot />
     </main>
     <Footer />
+    <ContactModal />
   </body>
 </html>

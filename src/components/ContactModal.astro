@@ -1,0 +1,96 @@
+---
+---
+
+<div class="modal-backdrop" id="contact-modal" hidden role="dialog" aria-modal="true" aria-labelledby="contact-title">
+  <div class="modal" role="document">
+    <button type="button" class="modal-close" id="contact-close" aria-label="Close">×</button>
+    <h3 id="contact-title">Contact me</h3>
+    <ul class="contact-links">
+      <li>
+        <a href="https://x.com/quthreads" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M18.3 3H21l-6.6 7.5L22 21h-6.2l-4.9-6.4L5.3 21H2.6l7-8L2 3h6.3l4.4 5.8L18.3 3zm-1.1 16.2h1.7L7 4.7H5.2l12 14.5z"></path></svg>
+          <span class="label">@quthreads</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.linkedin.com/in/maliasadi/" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.5 8.5H3.8V21h2.7V8.5zM5.15 3.2a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2zM20.2 21h-2.7v-6.1c0-1.5 0-3.4-2.1-3.4s-2.4 1.6-2.4 3.3V21H10.3V8.5h2.6v1.7h.1c.4-.7 1.3-1.5 2.7-1.5 2.9 0 3.4 1.9 3.4 4.4V21z"></path></svg>
+          <span class="label">LinkedIn</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://pennylane.ai/profile/maliasadi" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.7"></circle><circle cx="12" cy="12" r="2.2" fill="currentColor"></circle></svg>
+          <span class="label">PennyLane</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/maliasadi" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.52 2.87 8.36 6.84 10.0.5.1.68-.22.68-.49 0-.24-.01-.87-.01-1.71-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.12 2.91.86.09-.67.35-1.12.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.05A9.3 9.3 0 0 1 12 6.84c.85 0 1.71.12 2.51.35 1.91-1.32 2.75-1.05 2.75-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.59.69.49A10.03 10.03 0 0 0 22 12.26C22 6.58 17.52 2 12 2z"></path></svg>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('contact-modal');
+  const contactClose = document.getElementById('contact-close');
+  const contactOpeners = document.querySelectorAll<HTMLElement>('[data-open-contact], #contact-btn');
+  const focusSel = "a[href], button:not([disabled]), [tabindex]:not([tabindex='-1'])";
+  let lastFocus: Element | null = null;
+
+  function focusables() {
+    if (!modal) return [] as HTMLElement[];
+    return [...modal.querySelectorAll<HTMLElement>(focusSel)].filter(
+      (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true',
+    );
+  }
+
+  function openContact() {
+    if (!modal) return;
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    document.body.classList.add('modal-open');
+    const nodes = focusables();
+    (contactClose || nodes[0] || modal).focus();
+  }
+
+  function closeContact() {
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove('modal-open');
+    (lastFocus as HTMLElement | null)?.focus?.();
+  }
+
+  window.__openContact = openContact;
+  window.__closeContact = closeContact;
+
+  contactOpeners.forEach((el) => {
+    el.addEventListener('click', openContact);
+  });
+  contactClose?.addEventListener('click', closeContact);
+  modal?.addEventListener('click', (ev) => {
+    if (ev.target === modal) closeContact();
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape' && modal && !modal.hidden) {
+      ev.preventDefault();
+      closeContact();
+      return;
+    }
+    if (ev.key !== 'Tab' || !modal || modal.hidden) return;
+    const nodes = focusables();
+    if (!nodes.length) return;
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    if (ev.shiftKey && document.activeElement === first) {
+      ev.preventDefault();
+      last.focus();
+    } else if (!ev.shiftKey && document.activeElement === last) {
+      ev.preventDefault();
+      first.focus();
+    }
+  });
+</script>

@@ -1,34 +1,22 @@
 ---
-const path = Astro.url.pathname;
-const items = [
-  { href: '/blog/', label: 'Blog' },
-  { href: '/talks/', label: 'Talks' },
-];
+import { Image } from 'astro:assets';
+import aliPhoto from '../assets/ali.jpg';
 
-function current(href: string) {
-  return path === href || path.startsWith(href);
-}
+const path = Astro.url.pathname;
+const isHome = path === '/' || path === '';
 ---
 
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="/" aria-current={path === '/' ? 'page' : undefined}>
-      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4.2 21.2 12 2.8 19.8 21.2"></path>
-        <circle cx="12" cy="14.6" r="2.65"></circle>
-        <path d="M7.05 14.6h9.9"></path>
-      </svg>
+    <a class="brand" href="/" aria-current={isHome ? 'page' : undefined}>
+      <span class="brand-avatar">
+        <Image src={aliPhoto} alt="" width={64} height={64} densities={[1, 2]} />
+      </span>
       Ali Asadi
     </a>
-    <nav class="nav" aria-label="Primary">
-      {
-        items.map((item) => (
-          <a href={item.href} aria-current={current(item.href) ? 'page' : undefined}>
-            {item.label}
-          </a>
-        ))
-      }
-    </nav>
+    <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="site-menu">
+      Menu
+    </button>
     <button class="theme-toggle" type="button" id="theme-toggle" aria-label="Switch color theme">
       <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">
         <path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 7 7 0 1 0 20 14.5Z"></path>

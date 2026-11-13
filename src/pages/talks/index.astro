@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { getTalks } from '../../lib/talks';
 import { formatDate, isoDate } from '../../lib/dates';
+import { googleScholarUrl } from '../../lib/storyCopy';
 
 const talks = getTalks();
 ---
@@ -11,7 +12,6 @@ const talks = getTalks();
     <header class="page-hero">
       <p class="kicker"><span class="dot" aria-hidden="true"></span>Slides</p>
       <h1>Talks</h1>
-      <p class="lead">HTML decks, one file each. Open a talk to present it.</p>
     </header>
     {
       talks.length === 0 ? (
@@ -56,8 +56,11 @@ const talks = getTalks();
         </ul>
       )
     }
-    <p class="hint">
-      A new deck is one HTML file in <code>public/slides/</code>. The title, date, and venue come from tags inside that file. See the README.
-    </p>
+    {googleScholarUrl && (
+      <p class="publications">
+        <a href={googleScholarUrl} target="_blank" rel="noopener noreferrer">Publications</a>
+      </p>
+    )}
+    <p class="hint">Open a talk to view the deck full screen.</p>
   </div>
 </Base>

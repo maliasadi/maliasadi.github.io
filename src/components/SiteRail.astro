@@ -1,0 +1,74 @@
+---
+const path = Astro.url.pathname;
+
+function current(href: string) {
+  if (href === '/' || href === '') return path === '/' || path === '';
+  return path === href || path.startsWith(href);
+}
+---
+
+<nav class="sidebar" id="site-menu" aria-label="Site">
+  <button type="button" class="rail-toggle" id="rail-toggle" aria-expanded="true" aria-label="Collapse menu">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M6.2 2.6 11.6 8 6.2 13.4 5 12.2 9.2 8 5 3.8z"></path></svg>
+  </button>
+  <a class="side-link" href="/" aria-current={current('/') ? 'page' : undefined}>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M4.5 11.2 12 4.8l7.5 6.4"></path>
+      <path d="M6.5 10.2V19h11V10.2"></path>
+    </svg>
+    <span class="label">Home</span>
+  </a>
+  <a class="side-link" href="/blog/" aria-current={current('/blog/') ? 'page' : undefined}>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M6 4.5h9.5A2.5 2.5 0 0 1 18 7v13H7.5A1.5 1.5 0 0 1 6 18.5z"></path>
+      <path d="M6 4.5A1.5 1.5 0 0 0 4.5 6v12.5A1.5 1.5 0 0 1 6 18.5"></path>
+      <path d="M9 9h6M9 13h6"></path>
+    </svg>
+    <span class="label">Blog</span>
+  </a>
+  <a class="side-link" href="/talks/" aria-current={current('/talks/') ? 'page' : undefined}>
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+      <rect x="3.5" y="5" width="17" height="11" rx="1.5"></rect>
+      <path d="M8 20h8M12 16v4"></path>
+    </svg>
+    <span class="label">Talks</span>
+  </a>
+  <button type="button" class="side-link" id="rail-contact" data-open-contact aria-haspopup="dialog" aria-controls="contact-modal">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M5 6.5h14A1.5 1.5 0 0 1 20.5 8v7A1.5 1.5 0 0 1 19 16.5H9.2L5.5 19.2V16.5H5A1.5 1.5 0 0 1 3.5 15V8A1.5 1.5 0 0 1 5 6.5z"></path>
+    </svg>
+    <span class="label">Contact me</span>
+  </button>
+</nav>
+
+<script>
+  const railToggle = document.getElementById('rail-toggle');
+  const menuBtn = document.getElementById('menu-btn');
+  const siteMenu = document.getElementById('site-menu');
+
+  railToggle?.addEventListener('click', () => {
+    const collapsed = document.body.classList.toggle('rail-collapsed');
+    railToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    railToggle.setAttribute('aria-label', collapsed ? 'Expand menu' : 'Collapse menu');
+    window.dispatchEvent(new Event('resize'));
+  });
+
+  function setMenuOpen(open: boolean) {
+    document.body.classList.toggle('menu-open', open);
+    menuBtn?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  menuBtn?.addEventListener('click', () => {
+    setMenuOpen(!document.body.classList.contains('menu-open'));
+  });
+
+  siteMenu?.querySelectorAll('.side-link').forEach((el) => {
+    el.addEventListener('click', () => setMenuOpen(false));
+  });
+
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Escape' && document.body.classList.contains('menu-open')) {
+      setMenuOpen(false);
+    }
+  });
+</script>
