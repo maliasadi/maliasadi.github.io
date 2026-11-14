@@ -126,15 +126,88 @@ function fillGrid(root: Element | null, x0: number, color: string) {
 fillGrid(document.querySelector('.sv-cpu'), 8, '#E8B04B');
 fillGrid(document.querySelector('.sv-gpu'), 118, '#4FD1E8');
 
-const FIN_X0 = 126;
-const FIN_X1 = 292;
-const FIN_Y_LEAD = 158;
-const FIN_Y_MIN = FIN_Y_LEAD + 18; // 176, top of finance lane
-const FIN_Y_MAX = 238; // bottom of finance lane
-const finD = walkTo(FIN_X0, 230, FIN_X1, 188, 40, 11, 13, FIN_Y_MIN, FIN_Y_MAX);
-document.querySelectorAll('.t-finance, .t-finance-glow').forEach((el) => {
-  el.setAttribute('d', finD);
-});
+const CH5_YS = [38, 98, 158, 218] as const;
+const CH5_VB_H = 300;
+const CH5_METER_W = 51;
+const CH5_FIN_Y_MIN = 176;
+const CH5_FIN_Y_MAX = 238;
+const CH5_LAYOUT = { vbW: 480, uX: 335, meterX: 348, endX: 480, auraCx: 170 } as const;
+
+function meterArcD(x0: number, y0: number, w: number) {
+  return `M ${x0 + 0.15 * w},${y0 + 0.7 * w} A ${0.35 * w} ${0.35 * w} 0 0 1 ${x0 + 0.85 * w},${y0 + 0.7 * w}`;
+}
+
+function layoutCh5Circuit() {
+  const svg = document.getElementById('today-svg') as SVGSVGElement | null;
+  if (!svg) return;
+  const L = CH5_LAYOUT;
+  svg.setAttribute('viewBox', `0 0 ${L.vbW} ${CH5_VB_H}`);
+
+  svg.querySelectorAll('.t-gold, .t-cyan, .t-sand').forEach((el) => {
+    el.setAttribute('x1', '0');
+    el.setAttribute('x2', String(L.meterX));
+  });
+
+  const ugate = svg.querySelector('.ch5-ugate');
+  if (ugate) {
+    ugate.querySelector('line')?.setAttribute('x1', String(L.uX));
+    ugate.querySelector('line')?.setAttribute('x2', String(L.uX));
+    ugate.querySelectorAll('circle').forEach((c) => c.setAttribute('cx', String(L.uX)));
+    const box = ugate.querySelector('rect');
+    box?.setAttribute('x', String(L.uX - 12));
+    const label = ugate.querySelector('text');
+    label?.setAttribute('x', String(L.uX));
+  }
+
+  const sr = svg.getBoundingClientRect();
+  const dy = sr.height > 0 ? (1.5 * CH5_VB_H) / sr.height : 3; // ~3px apart on screen
+  svg.querySelectorAll<SVGGElement>('.ch5-meter').forEach((g, i) => {
+    const y = CH5_YS[i];
+    if (y == null) return;
+    const x0 = L.meterX;
+    const y0 = y - CH5_METER_W / 2;
+    const w = CH5_METER_W;
+    const box = g.querySelector('.meter-box');
+    box?.setAttribute('x', String(x0));
+    box?.setAttribute('y', String(y0));
+    box?.setAttribute('width', String(w));
+    box?.setAttribute('height', String(w));
+    g.querySelector('.meter-arc')?.setAttribute('d', meterArcD(x0, y0, w));
+    const needle = g.querySelector('.meter-needle');
+    needle?.setAttribute('x1', String(x0 + 0.5 * w));
+    needle?.setAttribute('y1', String(y0 + 0.7 * w));
+    needle?.setAttribute('x2', String(x0 + 0.8 * w));
+    needle?.setAttribute('y2', String(y0 + 0.25 * w));
+    const lines = g.querySelectorAll('.classical-wire');
+    lines[0]?.setAttribute('x1', String(x0 + w));
+    lines[0]?.setAttribute('x2', String(L.endX));
+    lines[0]?.setAttribute('y1', String(y - dy));
+    lines[0]?.setAttribute('y2', String(y - dy));
+    lines[1]?.setAttribute('x1', String(x0 + w));
+    lines[1]?.setAttribute('x2', String(L.endX));
+    lines[1]?.setAttribute('y1', String(y + dy));
+    lines[1]?.setAttribute('y2', String(y + dy));
+  });
+
+  svg.querySelectorAll<SVGGElement>('.ch5-blochs > g').forEach((g, i) => {
+    const y = CH5_YS[i];
+    if (y == null) return;
+    g.setAttribute('transform', `translate(${L.uX - 50}, ${y})`);
+  });
+  svg.querySelector('.t-aura')?.setAttribute('cx', String(L.auraCx));
+
+  const finD = walkTo(0, 230, L.meterX, 218, 40, 11, 13, CH5_FIN_Y_MIN, CH5_FIN_Y_MAX);
+  svg.querySelectorAll<SVGGeometryElement>('.t-finance, .t-finance-glow').forEach((el) => {
+    el.setAttribute('d', finD);
+    if (el.style.strokeDashoffset === '0' || el.style.strokeDasharray === 'none') {
+      const len = el.getTotalLength();
+      el.style.strokeDasharray = String(len);
+      el.style.strokeDashoffset = '0';
+    }
+  });
+}
+
+layoutCh5Circuit();
 
 if (!reduceMotion) {
   hideStroke('.ch1-wire, .ch3-gold, .ch3-cyan, .ch3-sand, .t-gold, .t-cyan, .t-sand, .t-finance, .t-finance-glow');
@@ -155,7 +228,7 @@ function revealStatic() {
   gsap.set('.intro-gold, .intro-gold-glow', { attr: { x2: 760 } });
   gsap.set('.intro-cyan, .intro-cyan-glow', { attr: { x2: 700 } });
   gsap.set(
-    '.ch1-gate, .ch1-cnot, .ch1-aura, .ch1-state, .ch1-lead-label, .ch1-lead-ket, .ch1-caption-late, .ch3-cnot, .ch3-aura, .ch3-bell, .ch3-caption, .ch2-continue, .ch4-wires, .card, .cluster, .cluster-cables, .t-aura, .t-bell, .ch5-ugate, .t-finance, .t-finance-glow, .measure-me, #ch1 .bloch, #ch2 .bloch, #ch3 .bloch',
+    '.ch1-gate, .ch1-cnot, .ch1-aura, .ch1-state, .ch1-lead-label, .ch1-lead-ket, .ch1-caption-late, .ch3-cnot, .ch3-aura, .ch3-bell, .ch3-caption, .ch2-continue, .ch4-wires, .card, .cluster, .cluster-cables, .t-aura, .t-bell, .ch5-ugate, .ch5-measure, .t-finance, .t-finance-glow, .measure-me, #ch1 .bloch, #ch2 .bloch, #ch3 .bloch',
     { opacity: 1, y: 0, x: 0, scale: 1 },
   );
   gsap.set('.ch1-caption-early', { opacity: 0 });
@@ -276,14 +349,14 @@ if (!reduceMotion) {
     .to('.cluster, .cluster-cables', { opacity: 1, y: 0, duration: 0.75, onUpdate: layoutCables }, 1.6);
   attachAutoplay('ch4', ch4);
 
-  gsap.set('.t-aura, .t-bell, .ch5-ugate', { opacity: 0 });
+  gsap.set('.t-aura, .t-bell, .ch5-ugate, .ch5-measure', { opacity: 0 });
   gsap.set('#amp-bars .fill', { width: '0%' });
   gsap.set('.measure-me', { opacity: 0, y: 8 });
   gsap.set('#ch5 .ch5-blochs', { opacity: 0 });
   const ch5 = gsap.timeline({ paused: true, defaults: { ease: 'power2.out' } });
   ch5.to('.t-gold, .t-cyan, .t-sand', { strokeDashoffset: 0, ease: 'none', duration: 0.85 }, 0)
     .to('.t-finance, .t-finance-glow', { strokeDashoffset: 0, ease: 'none', duration: 1.2 }, 0.35)
-    .to('.t-aura, .t-bell, .ch5-ugate', { opacity: 1, duration: 0.5 }, 1.0)
+    .to('.t-aura, .t-bell, .ch5-ugate, .ch5-measure', { opacity: 1, duration: 0.5 }, 1.0)
     .to('#amp-bars .bar-row[data-ket="1000"] .fill', { width: '44.7%', duration: 0.5 }, 1.55)
     .to('#amp-bars .bar-row[data-ket="0100"] .fill', { width: '54.8%', duration: 0.5 }, 1.75)
     .to('#amp-bars .bar-row[data-ket="0010"] .fill', { width: '59.2%', duration: 0.5 }, 1.95)
@@ -464,6 +537,7 @@ function applyCompactCircuits() {
 window.addEventListener('resize', () => {
   layoutCables();
   applyCompactCircuits();
+  layoutCh5Circuit();
 });
 layoutCables();
 applyCompactCircuits();
@@ -480,6 +554,7 @@ function collectMarks() {
   window.__ready = true;
   layoutCables();
   applyCompactCircuits();
+  layoutCh5Circuit();
 }
 
 ScrollTrigger.addEventListener('refresh', collectMarks);

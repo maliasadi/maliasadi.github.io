@@ -236,6 +236,8 @@ body:not(.story) .sidebar a[aria-current="page"] {
 body.story .ket,
 body.story .math,
 body.story .bar-row .ket,
+body.story .circuit-label,
+body.story .ch5-state-eq,
 body.story .norm,
 body.story .caption,
 body.story .order-note,
@@ -666,13 +668,46 @@ body.story .stage svg.ch4-wires { height: 64px; max-height: 64px; flex: 0 0 auto
   grid-template-columns: 1.25fr 0.85fr;
   gap: 16px;
   min-height: 0;
+  --ch5-label-col: 7.5rem;
+  --ch5-val-col: 3.2rem;
+  --ch5-col-gap: 8px;
+}
+.today-circuit,
+.bar-row {
+  display: grid;
+  grid-template-columns: var(--ch5-label-col) 1fr var(--ch5-val-col);
+  gap: var(--ch5-col-gap);
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.today-circuit-col { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.ch5-state-eq { margin: 0; font-size: 12px; color: var(--text); line-height: 1.45; }
+.today-circuit { align-items: stretch; }
+.circuit-labels { position: relative; min-width: 0; }
+.circuit-label {
+  position: absolute;
+  right: 0;
+  left: 0;
+  transform: translateY(-50%);
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  text-align: left;
+}
+.circuit-end { min-width: 0; }
+.today-circuit svg {
+  display: block;
+  overflow: visible;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 480 / 300;
+  max-height: none;
+  align-self: start;
+  justify-self: stretch;
 }
 .bars { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
 .bar-row {
-  display: grid;
-  grid-template-columns: 5.2rem 1fr 3.2rem;
-  gap: 8px;
-  align-items: center;
   margin: 4px 0;
 }
 .bar-row .ket { font-size: 16px; color: var(--text); }
@@ -899,7 +934,8 @@ body.modal-open { overflow: hidden; }
   body.story .chapter .stage > svg,
   body.story .ch4-wires,
   body.story .ch2-continue,
-  body.story .today-grid > svg {
+  body.story .today-grid > svg,
+  body.story .today-circuit svg {
     min-width: 0;
     width: 100%;
     height: auto;
@@ -915,7 +951,11 @@ body.modal-open { overflow: hidden; }
   body.story .kicker { font-size: 0.6875rem; }
   .intro-top { flex-direction: column; align-items: flex-start; }
   .hero-photo { width: 104px; height: 104px; }
-  .bar-row { grid-template-columns: 4.6rem 1fr 2.8rem; }
+  .today-grid {
+    --ch5-label-col: 7.2rem;
+    --ch5-val-col: 2.8rem;
+  }
+  .circuit-label { font-size: 16px; }
   .contact-links { grid-template-columns: 1fr; }
   .modal { width: min(100%, 420px); }
 
