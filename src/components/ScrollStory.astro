@@ -9,6 +9,25 @@ const gold = '#E8B04B';
 const cyan = '#4FD1E8';
 const sand = '#D9A878';
 const green = '#3FB950';
+
+/** Ch05 circuit layout in viewBox units. Wires sit on a 60-unit pitch. */
+const ch5Vb = { w: 480, h: 300 };
+const ch5WireX0 = 0;
+const ch5UX = 335;
+const ch5MeterX = 348;
+/** Square meter just under one wire pitch so neighbours don't overlap. */
+const ch5MeterW = 51;
+const ch5ClassicalDy = 5;
+const ch5Wires = [
+  { id: 'science', label: '|science\u27e9', color: gold, y: 38, lineClass: 't-gold', strokeClass: 'wire-gold', glowClass: 'wire-glow-gold' },
+  { id: 'software', label: '|software\u27e9', color: cyan, y: 98, lineClass: 't-cyan', strokeClass: 'wire-cyan', glowClass: 'wire-glow-cyan' },
+  { id: 'leadership', label: '|leadership\u27e9', color: sand, y: 158, lineClass: 't-sand', strokeClass: 'wire-sand', glowClass: 'wire-glow-sand' },
+  { id: 'finance', label: '|finance\u27e9', color: green, y: 218, lineClass: 't-finance', strokeClass: 'wire-green', glowClass: 't-finance-glow' },
+] as const;
+
+function meterArc(x0: number, y0: number, w: number) {
+  return `M ${x0 + 0.15 * w},${y0 + 0.7 * w} A ${0.35 * w} ${0.35 * w} 0 0 1 ${x0 + 0.85 * w},${y0 + 0.7 * w}`;
+}
 ---
 
 <div class="progress-sync" aria-hidden="true"></div>
@@ -287,7 +306,7 @@ const green = '#3FB950';
         </div>
       </article>
     </div>
-    <svg class="cluster-cables" viewBox="0 0 840 400" preserveAspectRatio="none" aria-hidden="true">
+    <svg class="cluster-cables" viewBox="0 0 840 400" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
       <path class="cluster-cable" fill="none" stroke={gold} stroke-width="1.7" opacity="0.9"></path>
       <path class="cluster-cable" fill="none" stroke={cyan} stroke-width="1.7" opacity="0.9"></path>
       <path class="cluster-cable" fill="none" stroke={gold} stroke-width="1.7" opacity="0.9"></path>
@@ -305,45 +324,67 @@ const green = '#3FB950';
   <p class="sub">{c.ch5.sub}</p>
   <div class="stage">
     <div class="today-grid">
-      <svg id="today-svg" viewBox="0 0 540 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="After a four-qubit gate, a weighted entangled state on four wires: science, software, leadership and finance. The finance wire is a rising random-walk line that stays in its own lane. Ket 1000 is science, ket 0100 is software, ket 0010 is leadership, ket 0001 is finance.">
-        <defs>
-          <radialGradient id="aura-grad-5" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color={cyan} stop-opacity="0.35"></stop>
-            <stop offset="55%" stop-color={gold} stop-opacity="0.18"></stop>
-            <stop offset="100%" stop-color={gold} stop-opacity="0"></stop>
-          </radialGradient>
-        </defs>
-        <text x="4" y="42" font-size="13" fill={gold}>|science⟩</text>
-        <text x="4" y="102" font-size="13" fill={cyan}>|software⟩</text>
-        <text x="4" y="162" font-size="13" fill={sand}>|leadership⟩</text>
-        <text x="4" y="222" font-size="13" fill={green}>|finance⟩</text>
-        <line class="t-gold wire-glow-gold" x1="126" y1="38" x2="292" y2="38"></line>
-        <line class="t-cyan wire-glow-cyan" x1="126" y1="98" x2="292" y2="98"></line>
-        <line class="t-sand wire-glow-sand" x1="126" y1="158" x2="292" y2="158"></line>
-        <line class="t-gold wire-gold" x1="126" y1="38" x2="292" y2="38" stroke-width="2.4"></line>
-        <line class="t-cyan wire-cyan" x1="126" y1="98" x2="292" y2="98" stroke-width="2.4"></line>
-        <line class="t-sand wire-sand" x1="126" y1="158" x2="292" y2="158" stroke-width="2.4"></line>
-        <ellipse class="t-aura" cx="210" cy="128" rx="110" ry="118" fill="url(#aura-grad-5)"></ellipse>
-        <path class="t-finance-glow" d="" fill="none"></path>
-        <path class="t-finance wire-green" d="" fill="none" stroke-width="2.4"></path>
-        <g class="ch5-ugate">
-          <line x1="300" y1="38" x2="300" y2="218" stroke="#f2f4f8" stroke-width="1.6"></line>
-          <circle cx="300" cy="38" r="5" fill="none" stroke={gold} stroke-width="1.6"></circle>
-          <circle cx="300" cy="98" r="5" fill="none" stroke={cyan} stroke-width="1.6"></circle>
-          <circle cx="300" cy="158" r="5" fill="none" stroke={sand} stroke-width="1.6"></circle>
-          <circle cx="300" cy="218" r="5" fill="none" stroke={green} stroke-width="1.6"></circle>
-          <rect class="gate-box" x="288" y="116" width="24" height="24" rx="3" stroke={gold} stroke-width="1.4"></rect>
-          <text x="300" y="128" font-size="13" fill={gold} text-anchor="middle" dominant-baseline="middle">U</text>
-        </g>
-        <text class="t-bell" x="328" y="118" font-size="11" fill="#f2f4f8">{c.ch5.state}</text>
-        <text class="t-bell t-bell-sub" x="328" y="138" font-size="11" fill="#f2f4f8">{c.ch5.stateLine2}</text>
-        <g class="ch5-blochs">
-          <Bloch class="bloch-sci ch5-bloch" color={gold} x={250} y={38} dir="up" r={18} arrowClass="arrow arrow-sci" />
-          <Bloch class="bloch-sw ch5-bloch" color={cyan} x={250} y={98} dir="up" r={18} arrowClass="arrow arrow-sw" />
-          <Bloch class="bloch-lead ch5-bloch" color={sand} x={250} y={158} dir="up" r={18} arrowClass="arrow arrow-lead" />
-          <Bloch class="bloch-fin ch5-bloch" color={green} x={250} y={218} dir="up" r={18} arrowClass="arrow arrow-fin" />
-        </g>
-      </svg>
+      <div class="today-circuit-col">
+      <p class="t-bell ch5-state-eq">{c.ch5.state} {c.ch5.stateLine2}</p>
+      <div class="today-circuit">
+        <div class="circuit-labels">
+          {ch5Wires.map((w) => (
+            <span class:list={['circuit-label', `circuit-label-${w.id}`]} style={`top: calc(${w.y} / ${ch5Vb.h} * 100%); color: ${w.color}`}>{w.label}</span>
+          ))}
+        </div>
+        <svg id="today-svg" viewBox={`0 0 ${ch5Vb.w} ${ch5Vb.h}`} preserveAspectRatio="xMinYMid meet" role="img" data-fin-x0={ch5WireX0} data-fin-x1={ch5MeterX} aria-label="After a four-qubit gate, a weighted entangled state on four wires: science, software, leadership and finance. Each wire ends in a measurement meter, then a short classical double wire. The finance wire is a rising random-walk line that stays in its own lane. Ket 1000 is science, ket 0100 is software, ket 0010 is leadership, ket 0001 is finance.">
+          <defs>
+            <radialGradient id="aura-grad-5" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color={cyan} stop-opacity="0.35"></stop>
+              <stop offset="55%" stop-color={gold} stop-opacity="0.18"></stop>
+              <stop offset="100%" stop-color={gold} stop-opacity="0"></stop>
+            </radialGradient>
+          </defs>
+          <line class="t-gold wire-glow-gold" x1={ch5WireX0} y1="38" x2={ch5MeterX} y2="38"></line>
+          <line class="t-cyan wire-glow-cyan" x1={ch5WireX0} y1="98" x2={ch5MeterX} y2="98"></line>
+          <line class="t-sand wire-glow-sand" x1={ch5WireX0} y1="158" x2={ch5MeterX} y2="158"></line>
+          <line class="t-gold wire-gold" x1={ch5WireX0} y1="38" x2={ch5MeterX} y2="38" stroke-width="2.4"></line>
+          <line class="t-cyan wire-cyan" x1={ch5WireX0} y1="98" x2={ch5MeterX} y2="98" stroke-width="2.4"></line>
+          <line class="t-sand wire-sand" x1={ch5WireX0} y1="158" x2={ch5MeterX} y2="158" stroke-width="2.4"></line>
+          <ellipse class="t-aura" cx="170" cy="128" rx="110" ry="118" fill="url(#aura-grad-5)"></ellipse>
+          <path class="t-finance-glow" d="" fill="none"></path>
+          <path class="t-finance wire-green" d="" fill="none" stroke-width="2.4"></path>
+          <g class="ch5-ugate">
+            <line x1={ch5UX} y1="38" x2={ch5UX} y2="218" stroke="#f2f4f8" stroke-width="1.6"></line>
+            <circle cx={ch5UX} cy="38" r="5" fill="none" stroke={gold} stroke-width="1.6"></circle>
+            <circle cx={ch5UX} cy="98" r="5" fill="none" stroke={cyan} stroke-width="1.6"></circle>
+            <circle cx={ch5UX} cy="158" r="5" fill="none" stroke={sand} stroke-width="1.6"></circle>
+            <circle cx={ch5UX} cy="218" r="5" fill="none" stroke={green} stroke-width="1.6"></circle>
+            <rect class="gate-box" x={ch5UX - 12} y="116" width="24" height="24" rx="3" stroke={gold} stroke-width="1.4"></rect>
+            <text x={ch5UX} y="128" font-size="13" fill={gold} text-anchor="middle" dominant-baseline="middle">U</text>
+          </g>
+          <g class="ch5-blochs">
+            <Bloch class="bloch-sci ch5-bloch" color={gold} x={ch5UX - 50} y={38} dir="up" r={18} arrowClass="arrow arrow-sci" />
+            <Bloch class="bloch-sw ch5-bloch" color={cyan} x={ch5UX - 50} y={98} dir="up" r={18} arrowClass="arrow arrow-sw" />
+            <Bloch class="bloch-lead ch5-bloch" color={sand} x={ch5UX - 50} y={158} dir="up" r={18} arrowClass="arrow arrow-lead" />
+            <Bloch class="bloch-fin ch5-bloch" color={green} x={ch5UX - 50} y={218} dir="up" r={18} arrowClass="arrow arrow-fin" />
+          </g>
+          {/* Measurement meters: one column after U. Swap this group to change the symbol. */}
+          <g class="ch5-measure">
+            {ch5Wires.map((w) => {
+              const x0 = ch5MeterX;
+              const y0 = w.y - ch5MeterW / 2;
+              const boxR = ch5MeterX + ch5MeterW;
+              return (
+                <g class="ch5-meter" data-wire={w.id}>
+                  <rect class="meter-box" x={x0} y={y0} width={ch5MeterW} height={ch5MeterW} rx="3" fill="#071018" stroke={w.color} stroke-width="1.4"></rect>
+                  <path class="meter-arc" d={meterArc(x0, y0, ch5MeterW)} fill="none" stroke={w.color} stroke-width="1.4"></path>
+                  <line class="meter-needle" x1={x0 + 0.5 * ch5MeterW} y1={y0 + 0.7 * ch5MeterW} x2={x0 + 0.8 * ch5MeterW} y2={y0 + 0.25 * ch5MeterW} stroke={w.color} stroke-width="1.4"></line>
+                  <line class="classical-wire" x1={boxR} y1={w.y - ch5ClassicalDy} x2={ch5Vb.w} y2={w.y - ch5ClassicalDy} stroke={w.color} stroke-width="1.4"></line>
+                  <line class="classical-wire" x1={boxR} y1={w.y + ch5ClassicalDy} x2={ch5Vb.w} y2={w.y + ch5ClassicalDy} stroke={w.color} stroke-width="1.4"></line>
+                </g>
+              );
+            })}
+          </g>
+        </svg>
+        <div class="circuit-end" aria-hidden="true"></div>
+      </div>
+      </div>
       <div class="bars" id="amp-bars">
         <div class="bar-row" data-ket="1000" data-amp="0.447">
           <div class="ket">|1000⟩</div>
