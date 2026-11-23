@@ -1,7 +1,6 @@
 /**
  * Work page entries, newest first.
- * The featured item is pinned above the timeline.
- * Set `secondary` for a smaller blog or tutorial card, and `latest` for the gold badge.
+ * Set `secondary` for a smaller blog or tutorial card.
  * To add a paper, insert it in this list.
  */
 
@@ -26,8 +25,6 @@ export interface WorkEntry {
   summary: string;
   links: WorkLink[];
   note?: WorkNote;
-  featured?: boolean;
-  latest?: boolean;
   secondary?: boolean;
 }
 
@@ -38,7 +35,6 @@ export const workEntries: WorkEntry[] = [
     meta: '2026 · arXiv preprint',
     summary: 'A practical method for bounding Trotter error in Hamiltonian simulation.',
     links: [{ label: 'arXiv', href: 'https://arxiv.org/abs/2606.30738' }],
-    latest: true,
   },
   {
     title: 'Propelling aerospace applications with Rolls-Royce, AMD, and PennyLane',
@@ -68,7 +64,6 @@ export const workEntries: WorkEntry[] = [
     meta: '2024 · arXiv preprint',
     summary: 'A hybrid programming approach for running Lightning at HPC scale.',
     links: [{ label: 'arXiv', href: 'https://arxiv.org/abs/2403.02512' }],
-    featured: true,
   },
   {
     title: 'Catalyst: a Python JIT compiler for auto-differentiable hybrid quantum programs',

@@ -6,11 +6,8 @@ import { workEntries } from '../../data/work';
 import { googleScholarUrl } from '../../lib/storyCopy';
 import '../../styles/work.css';
 
-const featured = workEntries.find((entry) => entry.featured);
-const rest = workEntries.filter((entry) => !entry.featured);
-
-const byYear = new Map<number, typeof rest>();
-for (const entry of rest) {
+const byYear = new Map<number, typeof workEntries>();
+for (const entry of workEntries) {
   const group = byYear.get(entry.year);
   if (group) group.push(entry);
   else byYear.set(entry.year, [entry]);
@@ -68,14 +65,6 @@ const updated = new Intl.DateTimeFormat('en-US', {
         </a>
       </div>
     </header>
-
-    {
-      featured && (
-        <article class="work-feature">
-          <WorkCard entry={featured} heading="h2" />
-        </article>
-      )
-    }
 
     <div class="work-timeline">
       {

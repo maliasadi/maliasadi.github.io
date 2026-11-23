@@ -3,23 +3,13 @@ import type { WorkEntry } from '../data/work';
 
 interface Props {
   entry: WorkEntry;
-  heading?: 'h2' | 'h3';
 }
 
-const { entry, heading = 'h3' } = Astro.props;
-const Title = heading;
+const { entry } = Astro.props;
 ---
 
-<div class:list={['work-card', { 'is-featured': entry.featured, 'is-secondary': entry.secondary }]}>
-  {
-    (entry.featured || entry.latest) && (
-      <div class="work-badges">
-        {entry.featured && <span class="badge badge-featured">Featured</span>}
-        {entry.latest && <span class="badge badge-latest">Latest research</span>}
-      </div>
-    )
-  }
-  <Title class="work-card-title">{entry.title}</Title>
+<div class:list={['work-card', { 'is-secondary': entry.secondary }]}>
+  <h3 class="work-card-title">{entry.title}</h3>
   <p class="work-meta">{entry.meta}</p>
   <p class="work-summary">{entry.summary}</p>
   {
