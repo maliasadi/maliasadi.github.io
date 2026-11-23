@@ -103,6 +103,16 @@ export const workEntries: WorkEntry[] = [
     links: [{ label: 'arXiv', href: 'https://arxiv.org/abs/1811.04968' }],
   },
   {
+    title: 'Xanadu Quantum Codebook',
+    year: 2021,
+    meta: '2021 · Interactive textbook (now the PennyLane Codebook)',
+    summary: 'An interactive, code-first introduction to quantum computing.',
+    links: [
+      { label: 'Codebook', href: 'https://pennylane.ai/codebook', arrow: true },
+      { label: 'Source', href: 'https://github.com/XanaduAI/Xanadu-Quantum-Codebook' },
+    ],
+  },
+  {
     title: 'Cache-Friendly, Modular and Parallel Schemes For Computing Subresultant Chains',
     year: 2021,
     meta: '2021 · Ph.D. thesis, Western University',
