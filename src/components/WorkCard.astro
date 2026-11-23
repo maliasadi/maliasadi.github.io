@@ -1,0 +1,29 @@
+---
+import type { WorkEntry } from '../data/work';
+
+interface Props {
+  entry: WorkEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<div class:list={['work-card', { 'is-secondary': entry.secondary }]}>
+  <h3 class="work-card-title">{entry.title}</h3>
+  <p class="work-meta">{entry.meta}</p>
+  <p class="work-summary">{entry.summary}</p>
+  <p class="work-links">
+    {
+      entry.links.map((link) => (
+        <a href={link.href} target="_blank" rel="noopener noreferrer">
+          {link.label}
+          {link.arrow && (
+            <span class="ext" aria-hidden="true">
+              ↗
+            </span>
+          )}
+        </a>
+      ))
+    }
+  </p>
+</div>

@@ -1,0 +1,89 @@
+---
+import Base from '../../layouts/Base.astro';
+import BlochNode from '../../components/BlochNode.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { workEntries } from '../../data/work';
+import { googleScholarUrl } from '../../lib/storyCopy';
+import '../../styles/work.css';
+
+const byYear = new Map<number, typeof workEntries>();
+for (const entry of workEntries) {
+  const group = byYear.get(entry.year);
+  if (group) group.push(entry);
+  else byYear.set(entry.year, [entry]);
+}
+
+const tilts = [28, 16, 42, 24, 10, 36, 20, 48, 14, 32, 8, 40];
+let tilt = 0;
+const years = [...byYear.entries()].map(([year, entries]) => ({
+  year,
+  entries: entries.map((entry) => ({
+    entry,
+    angle: tilts[tilt++ % tilts.length],
+  })),
+}));
+
+const updated = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date());
+---
+
+<Base
+  title="Work"
+  description="Papers, blog posts, and tutorials by Ali Asadi."
+  footerNote={`Updated: ${updated}`}
+>
+  <div class="wrap work-page">
+    <header class="work-hero">
+      <div class="work-hero-grid" aria-hidden="true">
+        <svg viewBox="0 0 1200 280" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.09">
+            <path d="M40 70h160l24 24h200"></path>
+            <path d="M80 140h80v40h240"></path>
+            <path d="M520 50v80h160l20 20h180"></path>
+            <path d="M900 90h140v60"></path>
+            <path d="M200 210h300l30-30h160"></path>
+            <circle cx="224" cy="94" r="4"></circle>
+            <circle cx="160" cy="140" r="4"></circle>
+            <circle cx="520" cy="50" r="4"></circle>
+            <circle cx="680" cy="130" r="4"></circle>
+            <circle cx="1040" cy="90" r="4"></circle>
+            <circle cx="500" cy="210" r="4"></circle>
+            <rect x="1040" y="150" width="28" height="16" rx="2"></rect>
+            <rect x="300" y="40" width="28" height="16" rx="2"></rect>
+          </g>
+        </svg>
+      </div>
+      <p class="kicker"><span class="dot" aria-hidden="true"></span>Work</p>
+      <h1>From qubits to supercomputers:<br />research and code.</h1>
+      <div class="work-sub">
+        <p>Publications · Blog posts · Tutorials</p>
+        <a class="scholar-pill" href={googleScholarUrl} target="_blank" rel="noopener noreferrer">
+          All publications on Google Scholar <span class="ext" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="work-timeline">
+      {
+        years.map(({ year, entries }) => (
+          <>
+            <h2 class="work-year">
+              <span>{year}</span>
+            </h2>
+            {entries.map(({ entry, angle }) => (
+              <article class="work-entry">
+                <span class="work-bloch" aria-hidden="true">
+                  <BlochNode angle={angle} />
+                </span>
+                <WorkCard entry={entry} />
+              </article>
+            ))}
+          </>
+        ))
+      }
+    </div>
+  </div>
+</Base>

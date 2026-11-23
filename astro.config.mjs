@@ -7,6 +7,9 @@ import remarkMath from 'remark-math';
 export default defineConfig({
   site: 'https://maliasadi.github.io',
   trailingSlash: 'always',
+  redirects: {
+    '/talks': '/work/',
+  },
   markdown: {
     shikiConfig: {
       themes: {

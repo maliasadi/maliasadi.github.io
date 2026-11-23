@@ -15,9 +15,10 @@ interface Props {
   title: string;
   description: string;
   story?: boolean;
+  footerNote?: string;
 }
 
-const { title, description, story = false } = Astro.props;
+const { title, description, story = false, footerNote } = Astro.props;
 const fullTitle = title === 'Ali Asadi' ? title : `${title} · Ali Asadi`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const themeColor = '#071018';
@@ -50,7 +51,7 @@ const themeColor = '#071018';
     <main id="content">
       <slot />
     </main>
-    <Footer />
+    <Footer note={footerNote} />
     <ContactModal />
   </body>
 </html>

@@ -6,8 +6,7 @@
  */
 
 /**
- * Google Scholar profile URL. Leave empty to hide the Publications
- * link on the Talks page; set the URL here to show it.
+ * Google Scholar profile. The Work page uses this for the publications button.
  */
 export const googleScholarUrl = 'https://scholar.google.ca/citations?user=pUKiEEoAAAAJ&hl=en';
 

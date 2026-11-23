@@ -1,0 +1,27 @@
+---
+interface Props {
+  /** Clockwise degrees from straight up. */
+  angle?: number;
+}
+
+const { angle = 24 } = Astro.props;
+---
+
+<svg viewBox="0 0 24 24" aria-hidden="true">
+  <circle cx="12" cy="12" r="8.2" fill="var(--bg)" stroke="var(--cyan)" stroke-width="1.55"></circle>
+  <ellipse cx="12" cy="12" rx="8.2" ry="3.1" fill="none" stroke="var(--cyan)" stroke-width="1.15" opacity="0.95"></ellipse>
+  <line x1="12" y1="20" x2="12" y2="4" stroke="var(--cyan)" stroke-width="0.6" opacity="0.35"></line>
+  <g transform={`rotate(${angle} 12 12)`}>
+    <line x1="12" y1="12" x2="12" y2="5.35" stroke="var(--gold)" stroke-width="1.55" stroke-linecap="round"></line>
+    <polygon points="12,4.15 10.45,6.55 13.55,6.55" fill="var(--gold)"></polygon>
+  </g>
+</svg>
+
+<style>
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+</style>
