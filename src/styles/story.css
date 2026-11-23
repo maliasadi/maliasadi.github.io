@@ -1,5 +1,5 @@
 /* Home scroll-story, site rail, and contact modal.
-   Story tokens apply only on body.story so blog/talks keep the existing theme. */
+   Story tokens apply only on body.story so blog and work keep the existing theme. */
 
 @font-face {
   font-family: "DejaVu Sans Mono";
@@ -24,7 +24,7 @@
 
 body.rail-collapsed { --side-w: 52px; }
 
-/* Reserve rail space on blog/talks. The story page sizes chapters itself. */
+/* Reserve rail space on blog and work. The story page sizes chapters itself. */
 body:not(.story) .site-header,
 body:not(.story) .site-footer,
 body:not(.story) main {
