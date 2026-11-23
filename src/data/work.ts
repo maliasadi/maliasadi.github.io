@@ -103,9 +103,9 @@ export const workEntries: WorkEntry[] = [
     links: [{ label: 'arXiv', href: 'https://arxiv.org/abs/1811.04968' }],
   },
   {
-    title: 'Xanadu Quantum Codebook',
+    title: 'PennyLane Codebook',
     year: 2021,
-    meta: '2021 · Interactive textbook (now the PennyLane Codebook)',
+    meta: '2021 · Interactive quantum computing textbook',
     summary: 'An interactive, code-first introduction to quantum computing.',
     links: [
       { label: 'Codebook', href: 'https://pennylane.ai/codebook', arrow: true },
