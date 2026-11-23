@@ -12,16 +12,6 @@ const { entry } = Astro.props;
   <h3 class="work-card-title">{entry.title}</h3>
   <p class="work-meta">{entry.meta}</p>
   <p class="work-summary">{entry.summary}</p>
-  {
-    entry.note && (
-      <p class="work-note">
-        {entry.note.before}
-        <a href={entry.note.href} target="_blank" rel="noopener noreferrer">
-          {entry.note.label}
-        </a>
-      </p>
-    )
-  }
   <p class="work-links">
     {
       entry.links.map((link) => (

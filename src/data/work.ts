@@ -11,12 +11,6 @@ export interface WorkLink {
   arrow?: boolean;
 }
 
-export interface WorkNote {
-  before: string;
-  label: string;
-  href: string;
-}
-
 export interface WorkEntry {
   title: string;
   year: number;
@@ -24,7 +18,6 @@ export interface WorkEntry {
   meta: string;
   summary: string;
   links: WorkLink[];
-  note?: WorkNote;
   secondary?: boolean;
 }
 
@@ -90,11 +83,6 @@ export const workEntries: WorkEntry[] = [
     year: 2023,
     meta: '2023 · Journal of Symbolic Computation 115',
     summary: 'Techniques and an implementation for running triangular decompositions in parallel.',
-    note: {
-      before: 'Conference version: ',
-      label: 'ISSAC 2020',
-      href: 'https://doi.org/10.1145/3373207.3404065',
-    },
     links: [
       { label: 'DOI', href: 'https://doi.org/10.1016/j.jsc.2022.08.015' },
       { label: 'arXiv', href: 'https://arxiv.org/abs/1906.00039' },
@@ -139,15 +127,36 @@ export const workEntries: WorkEntry[] = [
     ],
   },
   {
+    title: 'On the parallelization of triangular decompositions',
+    year: 2020,
+    meta: '2020 · ISSAC 2020',
+    summary: 'A parallel approach to triangular decompositions.',
+    links: [{ label: 'DOI', href: 'https://doi.org/10.1145/3373207.3404065' }],
+  },
+  {
     title: 'Algorithms and Data Structures for Sparse Polynomial Arithmetic',
     year: 2019,
     meta: '2019 · Mathematics 7(5) 441',
     summary: 'Algorithms and data structures for arithmetic on sparse polynomials.',
-    note: {
-      before: 'Conference version: ',
-      label: 'CASC 2018',
-      href: 'https://doi.org/10.1007/978-3-319-99639-4_3',
-    },
     links: [{ label: 'DOI', href: 'https://doi.org/10.3390/math7050441' }],
+  },
+  {
+    title: 'Sparse Polynomial Arithmetic with the BPAS Library',
+    year: 2018,
+    meta: '2018 · CASC 2018, LNCS 11077',
+    summary: 'Sparse polynomial arithmetic in the BPAS library.',
+    links: [{ label: 'DOI', href: 'https://doi.org/10.1007/978-3-319-99639-4_3' }],
+  },
+  {
+    title: 'Algebraic tools supporting comprehensive optimization of parametric GPU kernels',
+    year: 2018,
+    meta: 'May 2018 · Poster, IBM CAS',
+    summary: 'Algebraic tools for optimizing parametric GPU kernels.',
+    links: [
+      {
+        label: 'Poster',
+        href: 'https://www.orcca.on.ca/files/presentations/2018_05-IBM-CAS_BPAS-Poster.pdf',
+      },
+    ],
   },
 ];
