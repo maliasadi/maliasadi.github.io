@@ -23,6 +23,34 @@ export interface WorkEntry {
 
 export const workEntries: WorkEntry[] = [
   {
+    title: 'Where Genesis Meets Quantum Genesis: Scaling a Quantum CFD Workflow to 40 Qubits on Lux',
+    year: 2026,
+    meta: 'November 24, 2026',
+    summary: 'A 40-qubit CFD block encoding, run on Lux across 64 AMD Instinct MI355X GPUs.',
+    links: [
+      {
+        label: 'Read on AMD',
+        href: 'https://www.amd.com/en/developer/resources/technical-articles/2026/where-genesis-meets-quantum-genesis.html',
+        arrow: true,
+      },
+    ],
+    secondary: true,
+  },
+  {
+    title: 'Throttling up aerospace applications with Rolls-Royce, AMD, and PennyLane on Lux',
+    year: 2026,
+    meta: 'November 24, 2026',
+    summary: 'A 2048 by 2048 CFD block encoding, simulated on the Lux supercomputer.',
+    links: [
+      {
+        label: 'Read on PennyLane',
+        href: 'https://pennylane.ai/blog/2026/11/throttling-up-aerospace-applications-with-rolls-royce-amd-and-pennylane-on-lux',
+        arrow: true,
+      },
+    ],
+    secondary: true,
+  },
+  {
     title: 'Practical Estimation of Trotter Error for Hamiltonian Simulation',
     year: 2026,
     meta: '2026 · arXiv preprint',
@@ -38,6 +66,20 @@ export const workEntries: WorkEntry[] = [
       {
         label: 'Read on PennyLane',
         href: 'https://pennylane.ai/blog/2026/03/propelling-aerospace-applications-rolls-royce-amd-pennylane',
+        arrow: true,
+      },
+    ],
+    secondary: true,
+  },
+  {
+    title: 'Propelling Aerospace Innovation: Scaling Quantum Workflows on AMD GPUs with Rolls-Royce',
+    year: 2026,
+    meta: 'March 10, 2026',
+    summary: 'A 256 by 256 CFD workflow, compiled and run on one AMD Instinct MI300X.',
+    links: [
+      {
+        label: 'Read on AMD',
+        href: 'https://www.amd.com/en/developer/resources/technical-articles/2026/propelling-aerospace-innovation.html',
         arrow: true,
       },
     ],
